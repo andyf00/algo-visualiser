@@ -1,14 +1,14 @@
 export type Step =
-  | { type: 'compare'; indices: [number, number]; note?: string }
-  | { type: 'swap'; indices: [number, number]; note?: string }
-  | { type: 'overwrite'; index: number, value: number, note?: string };
+  | { type: "compare"; indices: [number, number]; note?: string }
+  | { type: "swap"; indices: [number, number]; note?: string }
+  | { type: "overwrite"; index: number; value: number; note?: string };
 
 export function applyStep(arr: number[], step: Step): number[] {
   const next = [...arr];
-  if (step.type === 'swap') {
+  if (step.type === "swap") {
     const [i, j] = step.indices;
     [next[i], next[j]] = [next[j], next[i]];
-  } else if (step.type === 'overwrite') {
+  } else if (step.type === "overwrite") {
     next[step.index] = step.value;
   }
   return next;
