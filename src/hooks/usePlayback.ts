@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 
 export function usePlayback(totalSteps: number, delayMs: number) {
   const [stepIndex, setStepIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [wantsToPlay, setWantsToPlay] = useState(false);
+
+  const isPlaying = wantsToPlay && stepIndex < totalSteps;
 
   // Timer
   useEffect(() => {
@@ -15,28 +17,23 @@ export function usePlayback(totalSteps: number, delayMs: number) {
     return () => clearInterval(id);
   }, [isPlaying, delayMs, totalSteps]);
 
-  // Auto-pause at the end
-  useEffect(() => {
-    if (stepIndex >= totalSteps) setIsPlaying(false);
-  }, [stepIndex, totalSteps]);
-
   function play() {
     if (stepIndex >= totalSteps) setStepIndex(0);
-    setIsPlaying(true);
+    setWantsToPlay(true);
   }
   function pause() {
-    setIsPlaying(false);
+    setWantsToPlay(false);
   }
   function reset() {
-    setIsPlaying(false);
+    setWantsToPlay(false);
     setStepIndex(0);
   }
   function stepForward() {
-    setIsPlaying(false);
+    setWantsToPlay(false);
     setStepIndex((i) => Math.min(i + 1, totalSteps));
   }
   function seek(n: number) {
-    setIsPlaying(false);
+    setWantsToPlay(false);
     setStepIndex(Math.max(0, Math.min(n, totalSteps)));
   }
 
