@@ -21,7 +21,7 @@ export function mergeSort(input: number[]): Step[] {
     let j = 0;
 
     while (i < left.length && j < right.length) {
-      steps.push({ type: "compare", indices: [low + i, mid + j] });
+      steps.push({ type: "compare", indices: [low + i, mid + j], line: 4 });
       merged.push(left[i] <= right[j] ? left[i++] : right[j++]);
     }
 
@@ -30,7 +30,7 @@ export function mergeSort(input: number[]): Step[] {
 
     merged.forEach((value, offset) => {
       a[low + offset] = value;
-      steps.push({ type: "overwrite", index: low + offset, value });
+      steps.push({ type: "overwrite", index: low + offset, value, line: 5 });
     });
   }
 

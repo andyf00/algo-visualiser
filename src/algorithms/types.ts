@@ -1,7 +1,9 @@
+type Meta = { note?: string; line?: number };
+
 export type Step =
-  | { type: "compare"; indices: [number, number]; note?: string; line?: number }
-  | { type: "swap"; indices: [number, number]; note?: string; line?: number }
-  | { type: "overwrite"; index: number; value: number; note?: string; line?: number };
+  | ({ type: "compare"; indices: [number, number] } & Meta)
+  | ({ type: "swap"; indices: [number, number] } & Meta)
+  | ({ type: "overwrite"; index: number; value: number } & Meta);
 
 export function applyStep(arr: number[], step: Step): number[] {
   const next = [...arr];

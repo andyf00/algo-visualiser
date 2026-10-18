@@ -11,6 +11,7 @@ import {
   MAX_LENGTH,
 } from "./algorithms/utils/parseNumbers";
 import { describeStep } from "./algorithms/describeStep";
+import { Pseudocode } from "./components/Pseudocode";
 
 export default function App() {
   const [algorithmId, setAlgorithmId] = useState("bubble");
@@ -40,6 +41,7 @@ export default function App() {
   let activeType: "compare" | "swap" | "overwrite" | null = null;
 
   const explanation = describeStep(lastStep, array);
+  const activeLine = lastStep?.line ?? null;
 
   if (lastStep !== null) {
     activeType = lastStep.type;
@@ -77,6 +79,7 @@ export default function App() {
   return (
     <div>
       <Bars array={array} active={active} activeType={activeType} />
+      <p aria-live="polite">{explanation}</p>
       <button onClick={isPlaying ? pause : play}>
         {isPlaying ? "Pause" : "Play"}
       </button>
@@ -96,7 +99,6 @@ export default function App() {
         value={stepIndex}
         onChange={(e) => seek(Number(e.target.value))}
       />
-      <p aria-live="polite">{explanation}</p>
       <p>
         Step {stepIndex} / {steps.length}
       </p>
@@ -144,6 +146,8 @@ export default function App() {
       />
       <button onClick={applyCustomInput}>Use these numbers</button>
       {error && <p role="alert">{error}</p>}
+
+      <Pseudocode lines={algorithm.pseudocode} activeLine={activeLine} />
     </div>
   );
 }

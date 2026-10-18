@@ -22,3 +22,16 @@
 .bar.overwrite {
   background: #22c55e;
 }
+
+.pseudocode {
+  font-family: monospace;
+}
+.line {
+  white-space: pre;
+  padding: 2px 8px;
+  border-left: 3px solid transparent;
+}
+.line.active {
+  background: #9593d6;
+  border-left-color: #facc15;
+}

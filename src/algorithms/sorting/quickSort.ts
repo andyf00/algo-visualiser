@@ -16,19 +16,19 @@ export function quickSort(input: number[]): Step[] {
 
     let i = low - 1;
     for (let j = low; j < high; j++) {
-      steps.push({ type: "compare", indices: [j, high] });
+      steps.push({ type: "compare", indices: [j, high], line: 2 });
       if (a[j] < pivot) {
         i++;
         if (i !== j) {
           [a[i], a[j]] = [a[j], a[i]];
-          steps.push({ type: "swap", indices: [i, j] });
+          steps.push({ type: "swap", indices: [i, j], line: 3 });
         }
       }
     }
 
     if (i + 1 !== high) {
       [a[i + 1], a[high]] = [a[high], a[i + 1]];
-      steps.push({ type: "swap", indices: [i + 1, high] });
+      steps.push({ type: "swap", indices: [i + 1, high], line: 4 });
     }
 
     return i + 1;
