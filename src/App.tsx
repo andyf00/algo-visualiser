@@ -4,6 +4,7 @@ import { applyStep } from "./algorithms/types";
 import { usePlayback } from "./hooks/usePlayback";
 import { algorithms } from "./algorithms";
 import { randomArray } from "./algorithms/randomArray";
+import { computeStats } from "./algorithms/stats";
 
 export default function App() {
   const [algorithmId, setAlgorithmId] = useState("bubble");
@@ -21,6 +22,10 @@ export default function App() {
   const array = useMemo(
     () => steps.slice(0, stepIndex).reduce(applyStep, input),
     [steps, stepIndex, input],
+  );
+  const stats = useMemo(
+    () => computeStats(steps, stepIndex),
+    [steps, stepIndex],
   );
   const lastStep = stepIndex > 0 ? steps[stepIndex - 1] : null;
   let active: number[] = [];
@@ -93,6 +98,16 @@ export default function App() {
         }}
       />
       <span>{size}</span>
+
+      <p>
+        Comparisons: {stats.comparisons} | Swaps: {stats.swaps} | Writes:{" "}
+        {stats.writes}
+      </p>
+      <p>
+        Time: best {algorithm.time.best}, average {algorithm.time.average},
+        worst {algorithm.time.worst} | Space: {algorithm.space}
+      </p>
+      <p>{algorithm.description}</p>
     </div>
   );
 }
