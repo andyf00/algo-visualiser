@@ -11,6 +11,13 @@
   --done: #0bdbae;
 }
 
+main {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  padding: 16px;
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -21,16 +28,16 @@ body {
 .bars {
   display: flex;
   align-items: flex-end; /* bars grow upward from the bottom */
-  gap: 2px;
-  height: 300px;
+  gap: var(--gap, 2px);
+  height: clamp(200px, 40vh, 400px);
 }
 
 .bar {
   flex: 1;
   background: var(--accent);
   transition:
-    height 0.1s,
-    background-color 0.1s;
+    height var(--step-ms),
+    background-color var(--step-ms);
 }
 .bar.compare {
   background: var(--compare);
@@ -70,4 +77,26 @@ body {
 .line.active {
   background: var(--accent);
   border-left-color: var(--compare);
+}
+
+button {
+  height: 28px;
+}
+button:hover {
+  background: var(--accent);
+}
+button:focus-visible {
+  outline: 2px solid var(--compare);
+}
+
+@media (max-width: 800px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
 }

@@ -40,9 +40,14 @@ export default function App() {
   let active: number[] = [];
   let activeType: "compare" | "swap" | "overwrite" | null = null;
 
-  const explanation = describeStep(lastStep, array);
-  const activeLine = lastStep?.line ?? null;
   const isDone = steps.length > 0 && stepIndex === steps.length;
+  const activeLine = isDone ? null : (lastStep?.line ?? null);
+  const explanation =
+    steps.length === 0
+      ? "Nothing to sort."
+      : isDone
+        ? "Sorted!"
+        : describeStep(lastStep, array);
 
   if (lastStep !== null) {
     activeType = lastStep.type;
@@ -78,7 +83,12 @@ export default function App() {
   }
 
   return (
-    <div className="app">
+    <div
+      className="app"
+      style={
+        { "--step-ms": `${Math.min(delayMs, 150)}ms` } as React.CSSProperties
+      }
+    >
       <header>
         <h1>Algorithm Visualiser</h1>
         <select
@@ -95,7 +105,12 @@ export default function App() {
 
       <main>
         <section className="visualiser">
-          <Bars array={array} active={active} activeType={activeType} isDone={isDone} />
+          <Bars
+            array={array}
+            active={active}
+            activeType={activeType}
+            isDone={isDone}
+          />
           <p aria-live="polite">{explanation}</p>
         </section>
 
