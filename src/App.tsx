@@ -105,89 +105,103 @@ export default function App() {
       </header>
 
       <main>
-        <section className="visualiser">
-          <Bars
-            array={array}
-            active={active}
-            activeType={activeType}
-            isDone={isDone}
-          />
-          <p aria-live="polite">{explanation}</p>
-        </section>
-
-        <section className="controls">
-          <div className="button-row">
-            <button className="primary" onClick={isPlaying ? pause : play}>
-              {isPlaying ? "Pause" : "Play"}
-            </button>
-            <button onClick={stepForward}>Step</button>
-            <button onClick={reset}>Reset</button>
-          </div>
-
-          <Field label="Speed" value={`${speed}x`}>
-            <input
-              type="range"
-              min={1}
-              max={10}
-              value={speed}
-              onChange={(e) => setSpeed(Number(e.target.value))}
+        <div className="left">
+          <section className="visualiser card">
+            <Bars
+              array={array}
+              active={active}
+              activeType={activeType}
+              isDone={isDone}
             />
-          </Field>
+            <p className="explanation" aria-live="polite">{explanation}</p>
+            <div className="legend">
+              <span><i className="dot compare"/> Compare</span>
+              <span><i className="dot swap"/> Swap</span>
+              <span><i className="dot write"/> Write</span>
+              <span><i className="dot done"/> Sorted</span>
+            </div>
+          </section>
 
-          <Field label="Progress" value={`${stepIndex} / ${steps.length}`}>
-            <input
-              type="range"
-              min={0}
-              max={steps.length}
-              value={stepIndex}
-              onChange={(e) => seek(Number(e.target.value))}
-            />
-          </Field>
+          <section className="info card">
+            <div className="stat-row">
+              <StatTile label="Comparisons" value={stats.comparisons} />
+              <StatTile label="Swaps" value={stats.swaps} />
+              <StatTile label="Writes" value={stats.writes} />
+            </div>
 
-          <Field label="Array size" value={size}>
-            <input
-              type="range"
-              min={5}
-              max={100}
-              value={size}
-              onChange={(e) => {
-                const n = Number(e.target.value);
-                setSize(n);
-                newRandomArray(n);
-              }}
-            />
-          </Field>
+            <div className="pill-row">
+              <Pill label="Best" value={algorithm.time.best} />
+              <Pill label="Average" value={algorithm.time.average} />
+              <Pill label="Worst" value={algorithm.time.worst} />
+              <Pill label="Space" value={algorithm.space} />
+            </div>
 
-          <button onClick={() => newRandomArray(size)}>Randomise</button>
+            <p className="description">{algorithm.description}</p>
+          </section>
+        </div>
 
-          <Field label="Custom input">
-            <input
-              type="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="5, 3, 8, 1"
-            />
-            <button onClick={applyCustomInput}>Use these numbers</button>
-            {error && <p role="alert">{error}</p>}
-          </Field>
-        </section>
+        <aside className="side">
+          <section className="controls card">
+            <div className="button-row">
+              <button className="primary" onClick={isPlaying ? pause : play}>
+                {isPlaying ? "Pause" : "Play"}
+              </button>
+              <button onClick={stepForward}>Step</button>
+              <button onClick={reset}>Reset</button>
+            </div>
 
-        <aside className="info">
-          <div className="stat-row">
-            <StatTile label="Comparisons" value={stats.comparisons} />
-            <StatTile label="Swaps" value={stats.swaps} />
-            <StatTile label="Writes" value={stats.writes} />
-          </div>
+            <Field label="Speed" value={`${speed}x`}>
+              <input
+                type="range"
+                min={1}
+                max={10}
+                value={speed}
+                onChange={(e) => setSpeed(Number(e.target.value))}
+              />
+            </Field>
 
-          <div className="pill-row">
-            <Pill label="Best" value={algorithm.time.best} />
-            <Pill label="Average" value={algorithm.time.average} />
-            <Pill label="Worst" value={algorithm.time.worst} />
-            <Pill label="Space" value={algorithm.space} />
-          </div>
+            <Field label="Progress" value={`${stepIndex} / ${steps.length}`}>
+              <input
+                type="range"
+                min={0}
+                max={steps.length}
+                value={stepIndex}
+                onChange={(e) => seek(Number(e.target.value))}
+              />
+            </Field>
 
-          <p>{algorithm.description}</p>
-          <Pseudocode lines={algorithm.pseudocode} activeLine={activeLine} />
+            <Field label="Array size" value={size}>
+              <input
+                type="range"
+                min={5}
+                max={100}
+                value={size}
+                onChange={(e) => {
+                  const n = Number(e.target.value);
+                  setSize(n);
+                  newRandomArray(n);
+                }}
+              />
+            </Field>
+
+            <button onClick={() => newRandomArray(size)}>Randomise</button>
+
+            <Field label="Custom input">
+              <input
+                type="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="5, 3, 8, 1"
+              />
+              <button onClick={applyCustomInput}>Use these numbers</button>
+              {error && <p role="alert">{error}</p>}
+            </Field>
+          </section>
+          
+          <section className="card">
+            <h2 className="field-label">Pseudocode</h2>
+            <Pseudocode lines={algorithm.pseudocode} activeLine={activeLine} />
+          </section>
         </aside>
       </main>
     </div>

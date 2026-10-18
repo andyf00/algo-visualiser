@@ -30,6 +30,7 @@ main {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 16px;
+  align-items: start;
 }
 
 body {
@@ -45,11 +46,56 @@ body {
   padding: 24px;
 }
 
-.controls {
+.left {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  accent-color: var(--accent);
+}
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* card (shared look) */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+/* ---- Bar Panel ---- */
+.explanation {
+  font-size: 16px;
+  margin: 16px 0 0;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.dot.compare {
+  background: var(--compare);
+}
+.dot.swap {
+  background: var(--swap);
+}
+.dot.write {
+  background: var(--write);
+}
+.dot.done {
+  background: var(--done);
 }
 
 .bars {
@@ -58,8 +104,8 @@ body {
   gap: var(--gap, 2px);
   height: clamp(200px, 40vh, 400px);
 }
-
 .bar {
+  border-radius: 4px 4px 0 0;
   flex: 1;
   background: var(--accent);
   transition:
@@ -79,63 +125,12 @@ body {
   background: var(--done);
 }
 
-.controls, .info {
+/* ---- Control Panel ---- */
+.controls {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 16px;
 }
-
-.pseudocode {
-  font-family: monospace;
-}
-.line {
-  white-space: pre;
-  padding: 2px 8px;
-  border-left: 3px solid transparent;
-}
-.line.active {
-  background: var(--accent);
-  border-left-color: var(--compare);
-}
-
-button {
-  background: var(--surface-2, #252936);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 16px;
-  cursor: pointer;
-}
-button.primary {
-  background: var(--accent);
-  border-color: transparent;
-}
-button:hover {
-  background: var(--surface-3);
-}
-button.primary:hover {
-  background: var(--accent-hover);
-}
-button:active {
-  transform: scale(0.98);
-}
-button:focus-visible {
-  outline: 2px solid var(--compare);
-}
-
-.button-row {
-  display: flex;
-  gap: 8px;
-}
-
-.button-row button {
-  flex: 1;
-}
-
 .field {
   display: flex;
   flex-direction: column;
@@ -160,12 +155,21 @@ button:focus-visible {
   color: var(--text);
 }
 
+/* ---- Info Panel ---- */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.info .description {
+  margin: 0;
+  color: var(--text-muted);
+}
 .stat-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
-
 .stat-tile {
   display: flex;
   flex-direction: column;
@@ -175,26 +179,22 @@ button:focus-visible {
   border: 1px solid var(--border);
   border-radius: 12px;
 }
-
 .stat-label {
   font-size: 12px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
-
 .stat-value {
   font-size: 28px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
-
 .pill-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
-
 .pill {
   padding: 4px 12px;
   border-radius: 999px;
@@ -202,18 +202,69 @@ button:focus-visible {
   border: 1px solid var(--border);
   font-size: 13px;
 }
-
 .pill-label {
   color: var(--text-muted);
   margin-right: 4px;
 }
 
+/* ---- Pseudocode Panel ---- */
+.pseudocode {
+  font-family: monospace;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+}
+.line {
+  white-space: pre;
+  padding: 2px 8px;
+  border-left: 3px solid transparent;
+}
+.line.active {
+  background: rgba(99, 102, 241, 0.2);
+  border-left-color: var(--accent);
+}
+
+/* Buttons */
+button {
+  background: var(--surface-2, #252936);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+button.primary {
+  background: var(--accent);
+  border-color: transparent;
+}
+button:hover {
+  background: var(--surface-3);
+}
+button.primary:hover {
+  background: var(--accent-hover);
+}
+button:active {
+  transform: scale(0.98);
+}
+button:focus-visible {
+  outline: 2px solid var(--compare);
+}
+.button-row {
+  display: flex;
+  gap: 8px;
+}
+.button-row button {
+  flex: 1;
+}
+
+/* Inputs */
 input[type="range"] {
   width: 100%;
   accent-color: var(--accent);
   margin: 0;
 }
-
 input[type="text"],
 select {
   background: var(--bg);
@@ -223,23 +274,21 @@ select {
   padding: 10px 12px;
   font: inherit;
 }
-
 input[type="text"]:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
 }
-
 input[type="text"]::placeholder {
   color: var(--text-muted);
 }
+
 
 @media (max-width: 800px) {
   main {
     grid-template-columns: 1fr;
   }
 }
-
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
