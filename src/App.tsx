@@ -3,7 +3,7 @@ import { Bars } from "./components/Bars";
 import { applyStep } from "./algorithms/types";
 import { usePlayback } from "./hooks/usePlayback";
 import { algorithms } from "./algorithms";
-import { randomArray } from "./algorithms/randomArray";
+import { randomArray } from "./algorithms/utils/randomArray";
 import { computeStats } from "./algorithms/stats";
 
 export default function App() {

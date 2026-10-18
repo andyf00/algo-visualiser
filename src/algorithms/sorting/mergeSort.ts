@@ -1,4 +1,4 @@
-import type { Step } from "./types";
+import type { Step } from "../types";
 
 export function mergeSort(input: number[]): Step[] {
   const a = [...input];

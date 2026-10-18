@@ -1,5 +1,5 @@
-import { applyStep } from "./types";
-import type { Step } from "./types";
+import { applyStep } from "../types";
+import type { Step } from "../types";
 
 export const cases: number[][] = [
   [],
