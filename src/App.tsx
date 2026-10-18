@@ -8,7 +8,7 @@ const INPUT = [5, 3, 8, 1, 9, 2, 7];
 
 export default function App() {
   const [speed, setSpeed] = useState(5);
-  const delayMs = 1000 / speed;
+  const delayMs = 1000 / speed ** 2;
 
   const steps = useMemo(() => bubbleSort(INPUT), []);
 
