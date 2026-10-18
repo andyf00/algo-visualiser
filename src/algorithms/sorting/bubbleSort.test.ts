@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { bubbleSort } from "./bubbleSort";
-import { cases, runSteps } from "./testUtils";
+import { cases, runSteps } from "../utils/testUtils";
 
 describe("bubbleSort", () => {
   it.each(cases.map((c) => [c]))("sorts %j", (input) => {
