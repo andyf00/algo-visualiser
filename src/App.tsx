@@ -77,77 +77,87 @@ export default function App() {
   }
 
   return (
-    <div>
-      <Bars array={array} active={active} activeType={activeType} />
-      <p aria-live="polite">{explanation}</p>
-      <button onClick={isPlaying ? pause : play}>
-        {isPlaying ? "Pause" : "Play"}
-      </button>
-      <button onClick={stepForward}>Step</button>
-      <button onClick={reset}>Reset</button>
-      <input
-        type="range"
-        min={1}
-        max={10}
-        value={speed}
-        onChange={(e) => setSpeed(Number(e.target.value))}
-      />
-      <input
-        type="range"
-        min={0}
-        max={steps.length}
-        value={stepIndex}
-        onChange={(e) => seek(Number(e.target.value))}
-      />
-      <p>
-        Step {stepIndex} / {steps.length}
-      </p>
-      
+    <div className="app">
+      <header>
+        <h1>Algorithm Visualiser</h1>
+        <select
+          value={algorithmId}
+          onChange={(e) => changeAlgorithm(e.target.value)}
+        >
+          {algorithms.map((a) => (
+            <option key={a.id} value={a.id}>
+              {a.name}
+            </option>
+          ))}
+        </select>
+      </header>
 
-      <select
-        value={algorithmId}
-        onChange={(e) => changeAlgorithm(e.target.value)}
-      >
-        {algorithms.map((a) => (
-          <option key={a.id} value={a.id}>
-            {a.name}
-          </option>
-        ))}
-      </select>
-      <button onClick={() => newRandomArray(size)}>Randomise</button>
-      <input
-        type="range"
-        min={5}
-        max={100}
-        value={size}
-        onChange={(e) => {
-          const n = Number(e.target.value);
-          setSize(n);
-          newRandomArray(n);
-        }}
-      />
+      <main>
+        <section className="visualiser">
+          <Bars array={array} active={active} activeType={activeType} />
+          <p aria-live="polite">{explanation}</p>
+        </section>
 
-      <span>{size}</span>
+        <section className="controls">
+          <button onClick={isPlaying ? pause : play}>
+            {isPlaying ? "Pause" : "Play"}
+          </button>
+          <button onClick={stepForward}>Step</button>
+          <button onClick={reset}>Reset</button>
+          <input
+            type="range"
+            min={1}
+            max={10}
+            value={speed}
+            onChange={(e) => setSpeed(Number(e.target.value))}
+          />
+          <input
+            type="range"
+            min={0}
+            max={steps.length}
+            value={stepIndex}
+            onChange={(e) => seek(Number(e.target.value))}
+          />
+          <p>
+            Step {stepIndex} / {steps.length}
+          </p>
 
-      <p>
-        Comparisons: {stats.comparisons} | Swaps: {stats.swaps} | Writes:{" "}
-        {stats.writes}
-      </p>
-      <p>
-        Time: best {algorithm.time.best}, average {algorithm.time.average},
-        worst {algorithm.time.worst} | Space: {algorithm.space}
-      </p>
-      <p>{algorithm.description}</p>
+          <button onClick={() => newRandomArray(size)}>Randomise</button>
+          <input
+            type="range"
+            min={5}
+            max={100}
+            value={size}
+            onChange={(e) => {
+              const n = Number(e.target.value);
+              setSize(n);
+              newRandomArray(n);
+            }}
+          />
+          <span>{size}</span>
 
-      <input
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="5, 3, 8, 1"
-      />
-      <button onClick={applyCustomInput}>Use these numbers</button>
-      {error && <p role="alert">{error}</p>}
+          <input
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="5, 3, 8, 1"
+          />
+          <button onClick={applyCustomInput}>Use these numbers</button>
+          {error && <p role="alert">{error}</p>}
+        </section>
 
-      <Pseudocode lines={algorithm.pseudocode} activeLine={activeLine} />
+        <aside className="info">
+          <p>
+            Comparisons: {stats.comparisons} | Swaps: {stats.swaps} | Writes:{" "}
+            {stats.writes}
+          </p>
+          <p>
+            Time: best {algorithm.time.best}, average {algorithm.time.average},
+            worst {algorithm.time.worst} | Space: {algorithm.space}
+          </p>
+          <p>{algorithm.description}</p>
+          <Pseudocode lines={algorithm.pseudocode} activeLine={activeLine} />
+        </aside>
+      </main>
     </div>
   );
 }
