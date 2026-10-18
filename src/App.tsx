@@ -173,18 +173,40 @@ export default function App() {
         </section>
 
         <aside className="info">
-          <p>
-            Comparisons: {stats.comparisons} | Swaps: {stats.swaps} | Writes:{" "}
-            {stats.writes}
-          </p>
-          <p>
-            Time: best {algorithm.time.best}, average {algorithm.time.average},
-            worst {algorithm.time.worst} | Space: {algorithm.space}
-          </p>
+          <div className="stat-row">
+            <StatTile label="Comparisons" value={stats.comparisons} />
+            <StatTile label="Swaps" value={stats.swaps} />
+            <StatTile label="Writes" value={stats.writes} />
+          </div>
+
+          <div className="pill-row">
+            <Pill label="Best" value={algorithm.time.best} />
+            <Pill label="Average" value={algorithm.time.average} />
+            <Pill label="Worst" value={algorithm.time.worst} />
+            <Pill label="Space" value={algorithm.space} />
+          </div>
+
           <p>{algorithm.description}</p>
           <Pseudocode lines={algorithm.pseudocode} activeLine={activeLine} />
         </aside>
       </main>
     </div>
+  );
+}
+
+function StatTile({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="stat-tile">
+      <span className="stat-label">{label}</span>
+      <span className="stat-value">{value}</span>
+    </div>
+  );
+}
+
+function Pill({ label, value }: { label: string; value: string }) {
+  return (
+    <span className="pill">
+      <span className="pill-label">{label}</span> {value}
+    </span>
   );
 }

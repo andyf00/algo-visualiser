@@ -79,14 +79,10 @@ body {
   background: var(--done);
 }
 
-.controls {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 16px;
-}
-
-.info {
+.controls, .info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -156,12 +152,60 @@ button:focus-visible {
   font-size: 12px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--text-muted)
+  color: var(--text-muted);
 }
 
 .field-value {
   font-variant-numeric: tabular-nums;
   color: var(--text);
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.stat-label {
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.pill-label {
+  color: var(--text-muted);
+  margin-right: 4px;
 }
 
 input[type="range"] {
@@ -170,7 +214,8 @@ input[type="range"] {
   margin: 0;
 }
 
-input[type="text"], select {
+input[type="text"],
+select {
   background: var(--bg);
   color: var(--text);
   border: 1px solid var(--border);
@@ -188,7 +233,6 @@ input[type="text"]:focus {
 input[type="text"]::placeholder {
   color: var(--text-muted);
 }
-
 
 @media (max-width: 800px) {
   main {
