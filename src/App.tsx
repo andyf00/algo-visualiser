@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Bars } from "./components/Bars";
+import { Field } from "./components/Field";
 import { applyStep } from "./algorithms/types";
 import { usePlayback } from "./hooks/usePlayback";
 import { algorithms } from "./algorithms";
@@ -115,50 +116,60 @@ export default function App() {
         </section>
 
         <section className="controls">
-          <button onClick={isPlaying ? pause : play}>
-            {isPlaying ? "Pause" : "Play"}
-          </button>
-          <button onClick={stepForward}>Step</button>
-          <button onClick={reset}>Reset</button>
-          <input
-            type="range"
-            min={1}
-            max={10}
-            value={speed}
-            onChange={(e) => setSpeed(Number(e.target.value))}
-          />
-          <input
-            type="range"
-            min={0}
-            max={steps.length}
-            value={stepIndex}
-            onChange={(e) => seek(Number(e.target.value))}
-          />
-          <p>
-            Step {stepIndex} / {steps.length}
-          </p>
+          <div className="button-row">
+            <button className="primary" onClick={isPlaying ? pause : play}>
+              {isPlaying ? "Pause" : "Play"}
+            </button>
+            <button onClick={stepForward}>Step</button>
+            <button onClick={reset}>Reset</button>
+          </div>
+
+          <Field label="Speed" value={`${speed}x`}>
+            <input
+              type="range"
+              min={1}
+              max={10}
+              value={speed}
+              onChange={(e) => setSpeed(Number(e.target.value))}
+            />
+          </Field>
+
+          <Field label="Progress" value={`${stepIndex} / ${steps.length}`}>
+            <input
+              type="range"
+              min={0}
+              max={steps.length}
+              value={stepIndex}
+              onChange={(e) => seek(Number(e.target.value))}
+            />
+          </Field>
+
+          <Field label="Array size" value={size}>
+            <input
+              type="range"
+              min={5}
+              max={100}
+              value={size}
+              onChange={(e) => {
+                const n = Number(e.target.value);
+                setSize(n);
+                newRandomArray(n);
+              }}
+            />
+          </Field>
 
           <button onClick={() => newRandomArray(size)}>Randomise</button>
-          <input
-            type="range"
-            min={5}
-            max={100}
-            value={size}
-            onChange={(e) => {
-              const n = Number(e.target.value);
-              setSize(n);
-              newRandomArray(n);
-            }}
-          />
-          <span>{size}</span>
 
-          <input
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="5, 3, 8, 1"
-          />
-          <button onClick={applyCustomInput}>Use these numbers</button>
-          {error && <p role="alert">{error}</p>}
+          <Field label="Custom input">
+            <input
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="5, 3, 8, 1"
+            />
+            <button onClick={applyCustomInput}>Use these numbers</button>
+            {error && <p role="alert">{error}</p>}
+          </Field>
         </section>
 
         <aside className="info">
