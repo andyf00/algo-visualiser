@@ -42,6 +42,7 @@ export default function App() {
 
   const explanation = describeStep(lastStep, array);
   const activeLine = lastStep?.line ?? null;
+  const isDone = steps.length > 0 && stepIndex === steps.length;
 
   if (lastStep !== null) {
     activeType = lastStep.type;
@@ -94,7 +95,7 @@ export default function App() {
 
       <main>
         <section className="visualiser">
-          <Bars array={array} active={active} activeType={activeType} />
+          <Bars array={array} active={active} activeType={activeType} isDone={isDone} />
           <p aria-live="polite">{explanation}</p>
         </section>
 
