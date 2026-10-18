@@ -21,12 +21,10 @@ export function usePlayback(totalSteps: number, delayMs: number) {
   }, [stepIndex, totalSteps]);
 
   function play() {
-    if (isPlaying) return;
-    if (stepIndex > totalSteps) setStepIndex(0);
+    if (stepIndex >= totalSteps) setStepIndex(0);
     setIsPlaying(true);
   }
   function pause() {
-    if (!isPlaying) return;
     setIsPlaying(false);
   }
   function reset() {
@@ -35,8 +33,12 @@ export function usePlayback(totalSteps: number, delayMs: number) {
   }
   function stepForward() {
     setIsPlaying(false);
-    if (stepIndex < totalSteps) setStepIndex(stepIndex + 1);
+    setStepIndex((i) => Math.min(i + 1, totalSteps));
+  }
+  function seek(n: number) {
+    setIsPlaying(false);
+    setStepIndex(Math.max(0, Math.min(n, totalSteps)));
   }
 
-  return { stepIndex, isPlaying, play, pause, reset, stepForward };
+  return { stepIndex, isPlaying, play, pause, reset, stepForward, seek };
 }
