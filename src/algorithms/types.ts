@@ -1,7 +1,7 @@
 export type Step =
-  | { type: "compare"; indices: [number, number]; note?: string }
-  | { type: "swap"; indices: [number, number]; note?: string }
-  | { type: "overwrite"; index: number; value: number; note?: string };
+  | { type: "compare"; indices: [number, number]; note?: string; line?: number }
+  | { type: "swap"; indices: [number, number]; note?: string; line?: number }
+  | { type: "overwrite"; index: number; value: number; note?: string; line?: number };
 
 export function applyStep(arr: number[], step: Step): number[] {
   const next = [...arr];

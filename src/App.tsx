@@ -5,12 +5,20 @@ import { usePlayback } from "./hooks/usePlayback";
 import { algorithms } from "./algorithms";
 import { randomArray } from "./algorithms/utils/randomArray";
 import { computeStats } from "./algorithms/stats";
+import {
+  parseNumbers,
+  MAX_VALUE,
+  MAX_LENGTH,
+} from "./algorithms/utils/parseNumbers";
+import { describeStep } from "./algorithms/describeStep";
 
 export default function App() {
   const [algorithmId, setAlgorithmId] = useState("bubble");
   const [input, setInput] = useState<number[]>(() => randomArray(20));
   const [size, setSize] = useState(20);
   const [speed, setSpeed] = useState(5);
+  const [text, setText] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const algorithm = algorithms.find((a) => a.id === algorithmId)!;
   const steps = useMemo(() => algorithm.run(input), [algorithm, input]);
@@ -31,6 +39,8 @@ export default function App() {
   let active: number[] = [];
   let activeType: "compare" | "swap" | "overwrite" | null = null;
 
+  const explanation = describeStep(lastStep, array);
+
   if (lastStep !== null) {
     activeType = lastStep.type;
     if (lastStep.type === "overwrite") {
@@ -47,6 +57,20 @@ export default function App() {
 
   function newRandomArray(newSize: number) {
     setInput(randomArray(newSize));
+    reset();
+  }
+
+  function applyCustomInput() {
+    const parsed = parseNumbers(text);
+    if (parsed === null) {
+      setError(
+        `Enter 1 to ${MAX_LENGTH} whole numbers between 1 and ${MAX_VALUE}, separated by commas or spaces.`,
+      );
+      return;
+    }
+    setError(null);
+    setInput(parsed);
+    setSize(parsed.length);
     reset();
   }
 
@@ -72,9 +96,12 @@ export default function App() {
         value={stepIndex}
         onChange={(e) => seek(Number(e.target.value))}
       />
+      <p aria-live="polite">{explanation}</p>
       <p>
         Step {stepIndex} / {steps.length}
       </p>
+      
+
       <select
         value={algorithmId}
         onChange={(e) => changeAlgorithm(e.target.value)}
@@ -97,6 +124,7 @@ export default function App() {
           newRandomArray(n);
         }}
       />
+
       <span>{size}</span>
 
       <p>
@@ -108,6 +136,14 @@ export default function App() {
         worst {algorithm.time.worst} | Space: {algorithm.space}
       </p>
       <p>{algorithm.description}</p>
+
+      <input
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder="5, 3, 8, 1"
+      />
+      <button onClick={applyCustomInput}>Use these numbers</button>
+      {error && <p role="alert">{error}</p>}
     </div>
   );
 }
