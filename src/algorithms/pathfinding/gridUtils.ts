@@ -1,7 +1,9 @@
 import type { Cell, CellState, Grid } from "./types";
 
 export function emptyStates(rows: number, cols: number): CellState[][] {
-  return Array.from({ length: rows }, () => Array<CellState>(cols).fill("empty"));
+  return Array.from({ length: rows }, () =>
+    Array<CellState>(cols).fill("empty"),
+  );
 }
 
 export function makeGrid(
@@ -18,3 +20,25 @@ export function makeGrid(
     end,
   };
 }
+
+export function setWall(grid: Grid, cell: Cell, value: boolean): Grid {
+  if (
+    !inBounds(grid, cell) ||
+    sameCell(cell, grid.start) ||
+    sameCell(cell, grid.end) ||
+    grid.walls[cell.row][cell.col] === value
+  ) {
+    return grid;
+  }
+
+  const newWalls = grid.walls.map((r) => [...r]);
+  newWalls[cell.row][cell.col] = value;
+
+  return { ...grid, walls: newWalls };
+}
+
+export const sameCell = (a: Cell, b: Cell) =>
+  a.row === b.row && a.col === b.col;
+
+export const inBounds = (g: Grid, c: Cell) =>
+  c.row >= 0 && c.row < g.rows && c.col >= 0 && c.col < g.cols;

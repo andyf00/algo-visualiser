@@ -1,4 +1,5 @@
 import type { Cell, Grid, PathStep } from "./types";
+import { sameCell, inBounds } from "./gridUtils";
 
 const directions = [
   { row: -1, col: 0 }, // up
@@ -27,19 +28,14 @@ export function bfs(grid: Grid): PathStep[] {
     const current = queue[head++];
     steps.push({ type: "visit", cell: current });
 
-    if (current.row === grid.end.row && current.col === grid.end.col) break;
+    if (sameCell(current, grid.end)) break;
 
     // neighbours
     let next = { row: 0, col: 0 };
     for (const d of directions) {
       next = { row: current.row + d.row, col: current.col + d.col };
 
-      if (
-        next.row < 0 ||
-        next.col < 0 ||
-        next.row >= grid.rows ||
-        next.col >= grid.cols
-      ) {
+      if (!inBounds(grid, next)) {
         continue;
       } else if (grid.walls[next.row][next.col] || seen[next.row][next.col]) {
         continue;
