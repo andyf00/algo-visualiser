@@ -58,7 +58,7 @@ export const algorithms: AlgorithmInfo[] = [
       "  if range has fewer than 2 items: return",
       "  mergeSort(left half)",
       "  mergeSort(right half)",
-      "  compare the front items of both halves, take the smaller",
+      "  compare front items of both halves, take the smaller",
       "  write the merged items back into the range",
     ],
   },

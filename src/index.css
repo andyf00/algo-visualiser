@@ -104,7 +104,7 @@ body {
 .explanation {
   font-size: 16px;
   margin: 16px 0 0;
-  min-height: 3em; /* room for two lines at line-height 1.5 */
+  min-height: 2.5em;
 }
 .legend {
   display: flex;
@@ -224,6 +224,9 @@ body {
   border-radius: 8px;
   padding: 12px;
   font-size: 14px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) transparent;
 }
 .pseudocode-card {
   display: flex;
@@ -231,6 +234,8 @@ body {
   gap: 12px;
 }
 .line {
+  width: max-content;
+  min-width: 100%;
   white-space: pre;
   padding: 2px 8px;
   border-left: 3px solid transparent;
@@ -364,4 +369,19 @@ input[type="text"]::placeholder {
   * {
     transition: none !important;
   }
+}
+
+/* Fallback for older WebKit/Blink browsers */
+.pseudocode::-webkit-scrollbar {
+  height: 8px;
+}
+.pseudocode::-webkit-scrollbar-track {
+  background: transparent;
+}
+.pseudocode::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+.pseudocode::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
