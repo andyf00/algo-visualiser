@@ -198,7 +198,7 @@ export default function App() {
             </Field>
           </section>
           
-          <section className="card">
+          <section className="card pseudocode-card">
             <h2 className="field-label">Pseudocode</h2>
             <Pseudocode lines={algorithm.pseudocode} activeLine={activeLine} />
           </section>
