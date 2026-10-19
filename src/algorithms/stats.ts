@@ -1,4 +1,4 @@
-import type { Step } from "./types";
+import type { Step } from "./sorting/types";
 
 export type Stats = { comparisons: number; swaps: number; writes: number };
 

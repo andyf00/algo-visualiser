@@ -1,4 +1,4 @@
-import type { Step } from "./types";
+import type { Step } from "./sorting/types";
 import { bubbleSort } from "./sorting/bubbleSort";
 import { insertionSort } from "./sorting/insertionSort";
 import { mergeSort } from "./sorting/mergeSort";

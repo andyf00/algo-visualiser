@@ -1,4 +1,4 @@
-import type { Step } from "../types";
+import type { Step } from "./types";
 
 export function insertionSort(input: number[]): Step[] {
   const a = [...input]; // never mutate the input

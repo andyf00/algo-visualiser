@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Bars } from "./components/Bars";
 import { Field } from "./components/Field";
-import { applyStep } from "./algorithms/types";
+import { applyStep } from "./algorithms/sorting/types";
 import { usePlayback } from "./hooks/usePlayback";
 import { algorithms } from "./algorithms";
 import { randomArray } from "./algorithms/utils/randomArray";

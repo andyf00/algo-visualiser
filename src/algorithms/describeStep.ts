@@ -1,4 +1,4 @@
-import type { Step } from "./types";
+import type { Step } from "./sorting/types";
 
 // `array` is the array as currently displayed (after the step was applied)
 export function describeStep(step: Step | null, array: number[]): string {
