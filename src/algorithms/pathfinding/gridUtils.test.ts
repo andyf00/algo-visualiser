@@ -1,8 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { emptyStates, makeGrid } from "./gridUtils";
+import { emptyStates, makeGrid, moveEndpoint } from "./gridUtils";
 import { setWall } from "./gridUtils";
 
-const g = makeGrid(3, 3, { row: 0, col: 0 }, { row: 2, col: 2 });
+const start = { row: 0, col: 0 };
+const end = { row: 2, col: 2 };
+const g = makeGrid(3, 3, start, end);
 
 describe("gridUtils", () => {
   it("emptyStates has the right size and values", () => {
@@ -39,5 +41,46 @@ describe("setWall", () => {
 
   it("returns the same grid when nothing changes", () => {
     expect(setWall(g, { row: 1, col: 1 }, false)).toBe(g);
+  });
+});
+
+describe("moveEndpoint", () => {
+  it.each([
+    ["start", "end"],
+    ["end", "start"],
+  ] as const)("moving %s leaves %s alone", (which, other) => {
+    const target = { row: 1, col: 1 };
+    const next = moveEndpoint(g, which, target);
+
+    expect(next[which]).toEqual(target);
+    expect(next[other]).toEqual(g[other]);
+  });
+
+  it("doesn't mutate the old grid", () => {
+    const next = moveEndpoint(g, "start", { row: 1, col: 1 });
+    expect(g.start).toEqual({ row: 0, col: 0 });
+    expect(next).not.toBe(g);
+  });
+
+  it("moving onto the other endpoint is ignored", () => {
+    expect(moveEndpoint(g, "start", end)).toBe(g);
+  });
+
+  it.each([[{ row: -1, col: 0 }], [{ row: 0, col: 3 }], [start]] as const)(
+    "moveEndpoint ignores %j",
+    (cell) => {
+      expect(moveEndpoint(g, "start", cell)).toBe(g);
+    },
+  );
+
+  it("clears a wall when an endpoint moves onto it, without mutating the old grid", () => {
+    const withWall = setWall(g, { row: 1, col: 1 }, true);
+    expect(withWall.walls[1][1]).toBe(true);
+
+    const next = moveEndpoint(withWall, "start", { row: 1, col: 1 });
+
+    expect(next.start).toEqual({ row: 1, col: 1 });
+    expect(next.walls[1][1]).toBe(false);
+    expect(withWall.walls[1][1]).toBe(true);
   });
 });

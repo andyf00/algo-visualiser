@@ -37,6 +37,26 @@ export function setWall(grid: Grid, cell: Cell, value: boolean): Grid {
   return { ...grid, walls: newWalls };
 }
 
+export function moveEndpoint(
+  grid: Grid,
+  which: "start" | "end",
+  cell: Cell,
+): Grid {
+  if (
+    !inBounds(grid, cell) ||
+    sameCell(cell, grid.start) ||
+    sameCell(cell, grid.end)
+  ) {
+    return grid;
+  }
+
+  if (!grid.walls[cell.row][cell.col]) return { ...grid, [which]: cell };
+
+  const newWalls = grid.walls.map((r) => [...r]);
+  newWalls[cell.row][cell.col] = false;
+  return { ...grid, [which]: cell, walls: newWalls };
+}
+
 export const sameCell = (a: Cell, b: Cell) =>
   a.row === b.row && a.col === b.col;
 
