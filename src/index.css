@@ -303,6 +303,24 @@ input[type="text"]::placeholder {
   color: var(--text-muted);
 }
 
+/* ---- Grid View ---- */
+.grid {
+  display: grid;
+  gap: 1px;
+  aspect-ratio: 2 / 1;
+}
+.cell {
+  background: var(--bg);
+  border-radius: 2px;
+  transition: background-color 0.15s;
+}
+.cell.wall { background: #3a3f52;}
+.cell.frontier { background: var(--compare);}
+.cell.visited { background: var(--accent);}
+.cell.path { background: var(--write);}
+.cell.start { background: #22c55e;}
+.cell.end { background: var(--swap);}
+
 @media (max-width: 800px) {
   .app {
     padding: 16px;
