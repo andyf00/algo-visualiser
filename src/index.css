@@ -222,7 +222,7 @@ body {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 12px;
+  padding: 12px 0;
   font-size: 14px;
   overflow-x: auto;
   scrollbar-width: thin;
@@ -237,8 +237,9 @@ body {
   width: max-content;
   min-width: 100%;
   white-space: pre;
-  padding: 2px 8px;
+  padding: 2px 12px;
   border-left: 3px solid transparent;
+  box-sizing: border-box;
 }
 .line.active {
   background: rgba(99, 102, 241, 0.2);
