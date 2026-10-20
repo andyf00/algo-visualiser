@@ -308,6 +308,7 @@ input[type="text"]::placeholder {
   display: grid;
   gap: 1px;
   aspect-ratio: 2 / 1;
+  user-select: none;
 }
 .cell {
   background: var(--bg);

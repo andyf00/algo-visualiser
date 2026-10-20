@@ -1,12 +1,26 @@
-import type { CellState, Grid } from "../algorithms/pathfinding/types";
+import type { Cell, CellState, Grid } from "../algorithms/pathfinding/types";
 
-type Props = { grid: Grid; states: CellState[][] };
+type Props = {
+  grid: Grid;
+  states: CellState[][];
+  onCellDown: (cell: Cell) => void;
+  onCellEnter: (cell: Cell) => void;
+  onRelease: () => void;
+};
 
-export function GridView({ grid, states }: Props) {
+export function GridView({
+  grid,
+  states,
+  onCellDown,
+  onCellEnter,
+  onRelease,
+}: Props) {
   return (
     <div
       className="grid"
       style={{ gridTemplateColumns: `repeat(${grid.cols}, 1fr)` }}
+      onMouseUp={onRelease}
+      onMouseLeave={onRelease}
     >
       {states.map((row, r) =>
         row.map((state, c) => {
@@ -22,7 +36,14 @@ export function GridView({ grid, states }: Props) {
                 ? "wall"
                 : state;
 
-          return <div key={`${r}-${c}`} className={`cell ${cellType}`} />;
+          return (
+            <div
+              key={`${r}-${c}`}
+              className={`cell ${cellType}`}
+              onMouseDown={() => onCellDown({ row: r, col: c })}
+              onMouseEnter={() => onCellEnter({ row: r, col: c })}
+            />
+          );
         }),
       )}
     </div>
