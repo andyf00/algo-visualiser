@@ -14,8 +14,9 @@ import { bfs } from "./algorithms/pathfinding/bfs";
 import { GridView } from "./components/GridView";
 import { Field } from "./components/Field";
 import { dijkstra } from "./algorithms/pathfinding/dijkstra";
+import { astar } from "./algorithms/pathfinding/astar";
 
-const algos = { bfs, dijkstra };
+const algos = { bfs, dijkstra, astar };
 type AlgoId = keyof typeof algos;
 type DragMode =
   | "none"
@@ -125,6 +126,7 @@ export default function PathfindingDemo() {
       >
         <option value="bfs">BFS</option>
         <option value="dijkstra">Dijkstra</option>
+        <option value="astar">A Star</option>
       </select>
 
       <GridView
@@ -140,7 +142,7 @@ export default function PathfindingDemo() {
           {isPlaying ? "Pause" : "Play"}
         </button>
         <button onClick={reset}>Reset</button>
-        <button onClick={handleClearWalls}>Clear walls</button>
+        <button onClick={handleClearWalls}>Clear</button>
       </div>
 
       <Field label="Progress" value={`${stepIndex} / ${steps.length}`}>
