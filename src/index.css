@@ -316,11 +316,16 @@ input[type="text"]::placeholder {
   transition: background-color 0.15s;
 }
 .cell.wall { background: #3a3f52;}
+.cell.heavy { box-shadow: inset 0 0 0 2px #f59e0b; }
 .cell.frontier { background: var(--compare);}
 .cell.visited { background: var(--accent);}
 .cell.path { background: var(--write);}
 .cell.start { background: #22c55e;}
 .cell.end { background: var(--swap);}
+
+.tempButton:active {
+  background-color: #0cbeda;
+}
 
 @media (max-width: 800px) {
   .app {

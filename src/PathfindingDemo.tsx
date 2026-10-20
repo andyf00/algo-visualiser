@@ -6,27 +6,59 @@ import {
   setWall,
   moveEndpoint,
   clearWalls,
+  setWeight,
 } from "./algorithms/pathfinding/gridUtils";
 import { applyPathStep, type Cell } from "./algorithms/pathfinding/types";
 import { usePlayback } from "./hooks/usePlayback";
 import { bfs } from "./algorithms/pathfinding/bfs";
 import { GridView } from "./components/GridView";
 import { Field } from "./components/Field";
+import { dijkstra } from "./algorithms/pathfinding/dijkstra";
 
-type DragMode = "none" | "drawWall" | "eraseWall" | "moveStart" | "moveEnd";
+const algos = { bfs, dijkstra };
+type AlgoId = keyof typeof algos;
+type DragMode =
+  | "none"
+  | "drawWall"
+  | "eraseWall"
+  | "drawWeight"
+  | "eraseWeight"
+  | "moveStart"
+  | "moveEnd";
+type Tool = "wall" | "weight";
+
+const WEIGHT_VALUE = 5;
 
 export default function PathfindingDemo() {
   const [grid, setGrid] = useState(() =>
     makeGrid(15, 30, { row: 7, col: 3 }, { row: 7, col: 26 }),
   );
-  const steps = useMemo(() => bfs(grid), [grid]);
-
+  const [algoId, setAlgoId] = useState<AlgoId>("dijkstra");
   const [dragMode, setDragMode] = useState<DragMode>("none");
+  const [tool, setTool] = useState<Tool>("wall");
+
+  const steps = useMemo(() => algos[algoId](grid), [algoId, grid]);
 
   const { stepIndex, isPlaying, play, pause, reset, seek } = usePlayback(
     steps.length,
     30,
   );
+
+  const visited = useMemo(
+    () => steps.slice(0, stepIndex).filter((s) => s.type === "visit").length,
+    [steps, stepIndex],
+  );
+
+  const pathCost = useMemo(() => {
+    const cells = steps.filter((s) => s.type === "path").map((s) => s.cell);
+    return cells
+      .slice(1)
+      .reduce((sum, c) => sum + grid.weights[c.row][c.col], 0);
+  }, [steps, grid]);
+
+  const hasPath = steps.some((s) => s.type === "path");
+  const isDone = steps.length > 0 && stepIndex === steps.length;
+
   const states = useMemo(
     () =>
       steps
@@ -39,6 +71,8 @@ export default function PathfindingDemo() {
     let next = grid;
     if (mode === "drawWall") next = setWall(grid, cell, true);
     else if (mode === "eraseWall") next = setWall(grid, cell, false);
+    else if (mode === "drawWeight") next = setWeight(grid, cell, WEIGHT_VALUE);
+    else if (mode === "eraseWeight") next = setWeight(grid, cell, 1);
     else if (mode === "moveStart") next = moveEndpoint(grid, "start", cell);
     else if (mode === "moveEnd") next = moveEndpoint(grid, "end", cell);
 
@@ -52,7 +86,11 @@ export default function PathfindingDemo() {
     let mode: DragMode;
     if (sameCell(cell, grid.start)) mode = "moveStart";
     else if (sameCell(cell, grid.end)) mode = "moveEnd";
-    else mode = grid.walls[cell.row][cell.col] ? "eraseWall" : "drawWall";
+    else if (tool === "wall")
+      mode = grid.walls[cell.row][cell.col] ? "eraseWall" : "drawWall";
+    else
+      mode =
+        grid.weights[cell.row][cell.col] > 1 ? "eraseWeight" : "drawWeight";
 
     setDragMode(mode);
     applyMode(mode, cell);
@@ -69,13 +107,26 @@ export default function PathfindingDemo() {
   function handleClearWalls() {
     const next = clearWalls(grid);
     if (next !== grid) {
-      setGrid(next)
+      setGrid(next);
       reset();
     }
   }
 
+  function handleAlgoChange(id: AlgoId) {
+    setAlgoId(id);
+    reset();
+  }
+
   return (
     <div>
+      <select
+        value={algoId}
+        onChange={(e) => handleAlgoChange(e.target.value as AlgoId)}
+      >
+        <option value="bfs">BFS</option>
+        <option value="dijkstra">Dijkstra</option>
+      </select>
+
       <GridView
         grid={grid}
         states={states}
@@ -101,6 +152,25 @@ export default function PathfindingDemo() {
           onChange={(e) => seek(Number(e.target.value))}
         />
       </Field>
+
+      <div>
+        <button
+          className={tool === "wall" ? "primary" : ""}
+          onClick={() => setTool("wall")}
+        >
+          Wall
+        </button>
+        <button
+          className={tool === "weight" ? "primary" : ""}
+          onClick={() => setTool("weight")}
+        >
+          Weight
+        </button>
+      </div>
+
+      <p>Visited: {visited}</p>
+      {isDone &&
+        (hasPath ? <p>Path cost: {pathCost}</p> : <p>No path found</p>)}
     </div>
   );
 }

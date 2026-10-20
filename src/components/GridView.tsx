@@ -27,6 +27,7 @@ export function GridView({
           const isStart = r === grid.start.row && c === grid.start.col;
           const isEnd = r === grid.end.row && c === grid.end.col;
           const isWall = grid.walls[r][c];
+          const isHeavy = grid.weights[r][c] > 1;
 
           const cellType = isStart
             ? "start"
@@ -39,10 +40,12 @@ export function GridView({
           return (
             <div
               key={`${r}-${c}`}
-              className={`cell ${cellType}`}
+              className={`cell ${cellType} ${isHeavy && !isWall ? "heavy" : ""}`}
               onMouseDown={() => onCellDown({ row: r, col: c })}
               onMouseEnter={() => onCellEnter({ row: r, col: c })}
-            />
+            >
+              {/* {isHeavy && !isWall ? grid.weights[r][c] : null} */}
+            </div>
           );
         }),
       )}
