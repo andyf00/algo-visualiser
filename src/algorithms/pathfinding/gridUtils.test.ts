@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { emptyStates, makeGrid, moveEndpoint } from "./gridUtils";
+import { emptyStates, makeGrid, moveEndpoint, clearWalls } from "./gridUtils";
 import { setWall } from "./gridUtils";
 
 const start = { row: 0, col: 0 };
@@ -88,5 +88,35 @@ describe("moveEndpoint", () => {
     const next = moveEndpoint(g, "end", { row: 1, col: 2 });
     expect(next.end).toEqual({ row: 1, col: 2 });
     expect(next.walls).toBe(g.walls); // same array, not just equal contents
+  });
+});
+
+describe("clearWalls", () => {
+  const start = { row: 0, col: 0 };
+  const end = { row: 2, col: 2 };
+
+  it("removes all walls and keeps size and endpoints", () => {
+    let g = makeGrid(3, 3, start, end);
+    g = setWall(g, { row: 1, col: 1 }, true);
+    g = setWall(g, { row: 0, col: 2 }, true);
+
+    const next = clearWalls(g);
+
+    expect(next.walls.flat().some(Boolean)).toBe(false);
+    expect(next.rows).toBe(3);
+    expect(next.cols).toBe(3);
+    expect(next.start).toEqual(start);
+    expect(next.end).toEqual(end);
+  });
+
+  it("does not mutate the old grid", () => {
+    const g = setWall(makeGrid(3, 3, start, end), { row: 1, col: 1 }, true);
+    clearWalls(g);
+    expect(g.walls[1][1]).toBe(true);
+  });
+
+  it("returns the same grid when there are no walls", () => {
+    const g = makeGrid(3, 3, start, end);
+    expect(clearWalls(g)).toBe(g);
   });
 });

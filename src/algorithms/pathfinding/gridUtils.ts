@@ -38,6 +38,11 @@ export function setWall(grid: Grid, cell: Cell, value: boolean): Grid {
   return { ...grid, walls: newWalls };
 }
 
+export function clearWalls(grid: Grid): Grid {
+  if (!grid.walls.some((row) => row.some(Boolean))) return grid;
+  return makeGrid(grid.rows, grid.cols, grid.start, grid.end)
+}
+
 export function moveEndpoint(
   grid: Grid,
   which: "start" | "end",

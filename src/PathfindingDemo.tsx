@@ -4,6 +4,8 @@ import {
   emptyStates,
   sameCell,
   setWall,
+  moveEndpoint,
+  clearWalls,
 } from "./algorithms/pathfinding/gridUtils";
 import { applyPathStep, type Cell } from "./algorithms/pathfinding/types";
 import { usePlayback } from "./hooks/usePlayback";
@@ -37,6 +39,8 @@ export default function PathfindingDemo() {
     let next = grid;
     if (mode === "drawWall") next = setWall(grid, cell, true);
     else if (mode === "eraseWall") next = setWall(grid, cell, false);
+    else if (mode === "moveStart") next = moveEndpoint(grid, "start", cell);
+    else if (mode === "moveEnd") next = moveEndpoint(grid, "end", cell);
 
     if (next !== grid) {
       setGrid(next);
@@ -45,11 +49,11 @@ export default function PathfindingDemo() {
   }
 
   function handleDown(cell: Cell) {
-    if (sameCell(cell, grid.start) || sameCell(cell, grid.end)) return;
+    let mode: DragMode;
+    if (sameCell(cell, grid.start)) mode = "moveStart";
+    else if (sameCell(cell, grid.end)) mode = "moveEnd";
+    else mode = grid.walls[cell.row][cell.col] ? "eraseWall" : "drawWall";
 
-    const mode: DragMode = grid.walls[cell.row][cell.col]
-      ? "eraseWall"
-      : "drawWall";
     setDragMode(mode);
     applyMode(mode, cell);
   }
@@ -60,6 +64,14 @@ export default function PathfindingDemo() {
 
   function handleRelease() {
     setDragMode("none");
+  }
+
+  function handleClearWalls() {
+    const next = clearWalls(grid);
+    if (next !== grid) {
+      setGrid(next)
+      reset();
+    }
   }
 
   return (
@@ -77,6 +89,7 @@ export default function PathfindingDemo() {
           {isPlaying ? "Pause" : "Play"}
         </button>
         <button onClick={reset}>Reset</button>
+        <button onClick={handleClearWalls}>Clear walls</button>
       </div>
 
       <Field label="Progress" value={`${stepIndex} / ${steps.length}`}>
