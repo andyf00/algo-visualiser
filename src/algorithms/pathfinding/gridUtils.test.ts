@@ -83,4 +83,10 @@ describe("moveEndpoint", () => {
     expect(next.walls[1][1]).toBe(false);
     expect(withWall.walls[1][1]).toBe(true);
   });
+
+  it("moves onto an empty cell without copying walls", () => {
+    const next = moveEndpoint(g, "end", { row: 1, col: 2 });
+    expect(next.end).toEqual({ row: 1, col: 2 });
+    expect(next.walls).toBe(g.walls); // same array, not just equal contents
+  });
 });

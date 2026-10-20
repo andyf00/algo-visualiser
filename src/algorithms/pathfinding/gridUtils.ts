@@ -21,6 +21,7 @@ export function makeGrid(
   };
 }
 
+// ---- Grid editing helpers ----
 export function setWall(grid: Grid, cell: Cell, value: boolean): Grid {
   if (
     !inBounds(grid, cell) ||
