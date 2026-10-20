@@ -4,6 +4,7 @@ export type Grid = {
   rows: number;
   cols: number;
   walls: boolean[][]; // walls[row][col] === true means blocked
+  weights: number[][]; // cost of entering each cell; default 1
   start: Cell;
   end: Cell;
 };

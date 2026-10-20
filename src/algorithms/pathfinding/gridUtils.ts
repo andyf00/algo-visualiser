@@ -16,6 +16,7 @@ export function makeGrid(
     rows,
     cols,
     walls: Array.from({ length: rows }, () => Array<boolean>(cols).fill(false)),
+    weights: Array.from({ length: rows }, () => Array<number>(cols).fill(1)),
     start,
     end,
   };
@@ -40,7 +41,7 @@ export function setWall(grid: Grid, cell: Cell, value: boolean): Grid {
 
 export function clearWalls(grid: Grid): Grid {
   if (!grid.walls.some((row) => row.some(Boolean))) return grid;
-  return makeGrid(grid.rows, grid.cols, grid.start, grid.end)
+  return makeGrid(grid.rows, grid.cols, grid.start, grid.end);
 }
 
 export function moveEndpoint(
@@ -61,6 +62,26 @@ export function moveEndpoint(
   const newWalls = grid.walls.map((r) => [...r]);
   newWalls[cell.row][cell.col] = false;
   return { ...grid, [which]: cell, walls: newWalls };
+}
+
+export function setWeight(grid: Grid, cell: Cell, value: number): Grid {
+  if (
+    !inBounds(grid, cell) ||
+    sameCell(cell, grid.start) ||
+    sameCell(cell, grid.end) ||
+    grid.walls[cell.row][cell.col] ||
+    !Number.isInteger(value) ||
+    value < 1 ||
+    value > 99 ||
+    grid.weights[cell.row][cell.col] === value
+  ) {
+    return grid;
+  }
+
+  const newWeights = grid.weights.map((r) => [...r]);
+  newWeights[cell.row][cell.col] = value;
+
+  return { ...grid, weights: newWeights };
 }
 
 export const sameCell = (a: Cell, b: Cell) =>
