@@ -1,12 +1,5 @@
 import type { Cell, Grid, PathStep } from "./types";
-import { sameCell, inBounds } from "./gridUtils";
-
-const directions = [
-  { row: -1, col: 0 }, // up
-  { row: 0, col: 1 }, // right
-  { row: 1, col: 0 }, // down
-  { row: 0, col: -1 }, // left
-];
+import { sameCell, inBounds, directions, buildPath } from "./gridUtils";
 
 export function bfs(grid: Grid): PathStep[] {
   const steps: PathStep[] = [];
@@ -51,14 +44,7 @@ export function bfs(grid: Grid): PathStep[] {
 
   if (!seen[grid.end.row][grid.end.col]) return steps;
 
-  const path: Cell[] = [];
-  let cell: Cell | null = grid.end;
-  while (cell !== null) {
-    path.push(cell);
-    cell = cameFrom[cell.row][cell.col];
-  }
-  path.reverse();
-
+  const path = buildPath(cameFrom, grid.end);
   for (const p of path) steps.push({ type: "path", cell: p });
   return steps;
 }

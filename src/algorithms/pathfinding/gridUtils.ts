@@ -1,5 +1,12 @@
 import type { Cell, CellState, Grid } from "./types";
 
+export const directions = [
+  { row: -1, col: 0 }, // up
+  { row: 0, col: 1 }, // right
+  { row: 1, col: 0 }, // down
+  { row: 0, col: -1 }, // left
+];
+
 export function emptyStates(rows: number, cols: number): CellState[][] {
   return Array.from({ length: rows }, () =>
     Array<CellState>(cols).fill("empty"),
@@ -89,3 +96,15 @@ export const sameCell = (a: Cell, b: Cell) =>
 
 export const inBounds = (g: Grid, c: Cell) =>
   c.row >= 0 && c.row < g.rows && c.col >= 0 && c.col < g.cols;
+
+export function buildPath(cameFrom: (Cell | null)[][], end: Cell): Cell[] {
+  const path: Cell[] = [];
+  let current: Cell | null = end;
+  while (current !== null) {
+    path.push(current);
+    current = cameFrom[current.row][current.col];
+  }
+  path.reverse();
+
+  return path;
+}
