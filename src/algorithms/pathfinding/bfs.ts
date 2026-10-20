@@ -31,13 +31,14 @@ export function bfs(grid: Grid): PathStep[] {
     if (sameCell(current, grid.end)) break;
 
     // neighbours
-    let next = { row: 0, col: 0 };
     for (const d of directions) {
-      next = { row: current.row + d.row, col: current.col + d.col };
+      const next = { row: current.row + d.row, col: current.col + d.col };
 
-      if (!inBounds(grid, next)) {
-        continue;
-      } else if (grid.walls[next.row][next.col] || seen[next.row][next.col]) {
+      if (
+        !inBounds(grid, next) ||
+        grid.walls[next.row][next.col] ||
+        seen[next.row][next.col]
+      ) {
         continue;
       }
 
@@ -58,6 +59,6 @@ export function bfs(grid: Grid): PathStep[] {
   }
   path.reverse();
 
-  for (const cell of path) steps.push({ type: "path", cell });
+  for (const p of path) steps.push({ type: "path", cell: p });
   return steps;
 }
