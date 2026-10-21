@@ -8,6 +8,14 @@ type Props = {
   onRelease: () => void;
 };
 
+function cellFromPoint(x: number, y: number): Cell | null {
+  const el = document.elementFromPoint(x, y);
+  if (!(el instanceof HTMLElement)) return null;
+  const { row, col } = el.dataset;
+  if (row === undefined || col === undefined) return null;
+  return { row: Number(row), col: Number(col) };
+}
+
 export function GridView({
   grid,
   states,
@@ -15,11 +23,23 @@ export function GridView({
   onCellEnter,
   onRelease,
 }: Props) {
+  function handleDown(e: React.PointerEvent) {
+    const cell = cellFromPoint(e.clientX, e.clientY);
+    if (cell) onCellDown(cell);
+  }
+  function handleMove(e: React.PointerEvent) {
+    const cell = cellFromPoint(e.clientX, e.clientY);
+    if (cell) onCellEnter(cell);
+  }
+
   return (
     <div
       className="grid"
       style={{ gridTemplateColumns: `repeat(${grid.cols}, 1fr)` }}
-      onMouseUp={onRelease}
+      onPointerDown={handleDown}
+      onPointerMove={handleMove}
+      onPointerUp={onRelease}
+      onPointerCancel={onRelease}
       onMouseLeave={onRelease}
     >
       {states.map((row, r) =>
@@ -41,8 +61,8 @@ export function GridView({
             <div
               key={`${r}-${c}`}
               className={`cell ${cellType} ${isHeavy && !isWall ? "heavy" : ""}`}
-              onMouseDown={() => onCellDown({ row: r, col: c })}
-              onMouseEnter={() => onCellEnter({ row: r, col: c })}
+              data-row={r}
+              data-col={c}
             >
               {/* {isHeavy && !isWall ? grid.weights[r][c] : null} */}
             </div>

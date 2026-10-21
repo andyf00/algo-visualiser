@@ -271,6 +271,7 @@ body {
   gap: 1px;
   aspect-ratio: 2 / 1;
   user-select: none;
+  touch-action: none;
 }
 .cell {
   background: var(--bg);
