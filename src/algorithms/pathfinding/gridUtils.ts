@@ -22,11 +22,19 @@ export function makeGrid(
   return {
     rows,
     cols,
-    walls: Array.from({ length: rows }, () => Array<boolean>(cols).fill(false)),
-    weights: Array.from({ length: rows }, () => Array<number>(cols).fill(1)),
+    walls: emptyWalls(rows, cols),
+    weights: defaultWeights(rows, cols),
     start,
     end,
   };
+}
+
+export function emptyWalls(rows: number, cols: number): boolean[][] {
+  return Array.from({ length: rows }, () => Array<boolean>(cols).fill(false));
+}
+
+export function defaultWeights(rows: number, cols: number): number[][] {
+  return Array.from({ length: rows }, () => Array<number>(cols).fill(1));
 }
 
 // ---- Grid editing helpers ----
@@ -48,7 +56,12 @@ export function setWall(grid: Grid, cell: Cell, value: boolean): Grid {
 
 export function clearWalls(grid: Grid): Grid {
   if (!grid.walls.some((row) => row.some(Boolean))) return grid;
-  return makeGrid(grid.rows, grid.cols, grid.start, grid.end);
+  return { ...grid, walls: emptyWalls(grid.rows, grid.cols) };
+}
+
+export function clearWeights(grid: Grid): Grid {
+  if (grid.weights.every((row) => row.every((w) => w === 1))) return grid;
+  return { ...grid, weights: defaultWeights(grid.rows, grid.cols) };
 }
 
 export function moveEndpoint(

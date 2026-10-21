@@ -15,7 +15,7 @@ describe("describeStep", () => {
   it("describes a swap with the original left value first", () => {
     // displayed array is AFTER the swap: [3, 5] came from [5, 3]
     expect(describeStep({ type: "swap", indices: [0, 1] }, [3, 5])).toBe(
-      "Swapped 5 and 3 (positions 0 and 1)",
+      "Swapped 5 and 3",
     );
   });
 
