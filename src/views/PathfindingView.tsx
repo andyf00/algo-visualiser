@@ -155,15 +155,17 @@ export default function PathfindingView() {
         />
       </Field>
 
-      <div>
+      <div className="segmented" role="group" aria-label="Tool">
         <button
-          className={tool === "wall" ? "primary" : ""}
+          className={tool === "wall" ? "active" : ""}
+          aria-pressed={tool === "wall"}
           onClick={() => setTool("wall")}
         >
           Wall
         </button>
         <button
-          className={tool === "weight" ? "primary" : ""}
+          className={tool === "weight" ? "active" : ""}
+          aria-pressed={tool === "weight"}
           onClick={() => setTool("weight")}
         >
           Weight

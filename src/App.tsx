@@ -11,8 +11,23 @@ export default function App() {
     <div className="app">
       <header>
         <h1>Algorithm Visualiser</h1>
-        
 
+        <div className="segmented" role="group" aria-label="Mode">
+          <button
+            className={mode === "sorting" ? "active" : ""}
+            aria-pressed={mode === "sorting"}
+            onClick={() => setMode("sorting")}
+          >
+            Sorting
+          </button>
+          <button
+            className={mode === "pathfinding" ? "active" : ""}
+            aria-pressed={mode === "pathfinding"}
+            onClick={() => setMode("pathfinding")}
+          >
+            Pathfinding
+          </button>
+        </div>
       </header>
 
       {mode === "sorting" ? <SortingView /> : <PathfindingView />}
