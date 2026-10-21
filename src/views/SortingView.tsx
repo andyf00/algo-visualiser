@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { Bars } from "../components/Bars";
 import { Field } from "../components/Field";
 import { Pseudocode } from "../components/Pseudocode";
+import { StatTile } from "../components/StatTile";
+import { Pill } from "../components/Pill";
 import { applyStep } from "../algorithms/sorting/types";
 import { usePlayback } from "../hooks/usePlayback";
 import { algorithms } from "../algorithms";
@@ -90,19 +92,6 @@ export default function SortingView() {
         { "--step-ms": `${Math.min(delayMs, 150)}ms` } as React.CSSProperties
       }
     >
-      <header>
-        <select
-          value={algorithmId}
-          onChange={(e) => changeAlgorithm(e.target.value)}
-        >
-          {algorithms.map((a) => (
-            <option key={a.id} value={a.id}>
-              {a.name}
-            </option>
-          ))}
-        </select>
-      </header>
-
       <main>
         <div className="left">
           <section className="visualiser card">
@@ -114,10 +103,10 @@ export default function SortingView() {
             />
             <p className="explanation" aria-live="polite">{explanation}</p>
             <div className="legend">
-              <span><i className="dot compare"/> Compare</span>
-              <span><i className="dot swap"/> Swap</span>
-              <span><i className="dot write"/> Write</span>
-              <span><i className="dot done"/> Sorted</span>
+              <span><i className="dot compare"/>Compare</span>
+              <span><i className="dot swap"/>Swap</span>
+              <span><i className="dot write"/>Write</span>
+              <span><i className="dot done"/>Sorted</span>
             </div>
           </section>
 
@@ -141,6 +130,17 @@ export default function SortingView() {
 
         <aside className="side">
           <section className="controls card">
+            <select
+              value={algorithmId}
+              onChange={(e) => changeAlgorithm(e.target.value)}
+            >
+              {algorithms.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name}
+                </option>
+              ))}
+            </select>
+
             <div className="button-row">
               <button className="primary" onClick={isPlaying ? pause : play}>
                 {isPlaying ? "Pause" : "Play"}
@@ -204,22 +204,5 @@ export default function SortingView() {
         </aside>
       </main>
     </div>
-  );
-}
-
-function StatTile({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="stat-tile">
-      <span className="stat-label">{label}</span>
-      <span className="stat-value">{value}</span>
-    </div>
-  );
-}
-
-function Pill({ label, value }: { label: string; value: string }) {
-  return (
-    <span className="pill">
-      <span className="pill-label">{label}</span> {value}
-    </span>
   );
 }

@@ -3,6 +3,8 @@ import { applyPathStep, type Cell } from "../algorithms/pathfinding/types";
 import { usePlayback } from "../hooks/usePlayback";
 import { GridView } from "../components/GridView";
 import { Field } from "../components/Field";
+import { StatTile } from "../components/StatTile";
+import { Pill } from "../components/Pill";
 import { bfs } from "../algorithms/pathfinding/bfs";
 import { dijkstra } from "../algorithms/pathfinding/dijkstra";
 import { astar } from "../algorithms/pathfinding/astar";
@@ -37,26 +39,26 @@ export default function PathfindingView() {
   const [algoId, setAlgoId] = useState<AlgoId>("bfs");
   const [dragMode, setDragMode] = useState<DragMode>("none");
   const [tool, setTool] = useState<Tool>("wall");
+  const [speed, setSpeed] = useState(5);
 
   const steps = useMemo(() => algos[algoId](grid), [algoId, grid]);
+  const delayMs = 1000 / speed ** 2;
 
-  const { stepIndex, isPlaying, play, pause, reset, seek } = usePlayback(
-    steps.length,
-    30,
-  );
+  const { stepIndex, isPlaying, play, pause, reset, seek } = 
+    usePlayback(steps.length, delayMs,);
 
   const visited = useMemo(
     () => steps.slice(0, stepIndex).filter((s) => s.type === "visit").length,
     [steps, stepIndex],
   );
 
-  const pathCost = useMemo(() => {
-    const cells = steps.filter((s) => s.type === "path").map((s) => s.cell);
-    return cells
-      .slice(1)
-      .reduce((sum, c) => sum + grid.weights[c.row][c.col], 0);
-  }, [steps, grid]);
+  const pathCells = useMemo(
+    () => steps.filter((s) => s.type === "path").map((s) => s.cell), 
+    [steps],
+  );
 
+  const pathMoves = Math.max(0, pathCells.length - 1); // steps taken (does not count the start cell)
+  const pathCost = pathCells.slice(1).reduce((sum, c) => sum + grid.weights[c.row][c.col], 0);
   const hasPath = steps.some((s) => s.type === "path");
   const isDone = steps.length > 0 && stepIndex === steps.length;
 
@@ -67,6 +69,12 @@ export default function PathfindingView() {
         .reduce(applyPathStep, emptyStates(grid.rows, grid.cols)),
     [steps, stepIndex, grid],
   );
+
+  const status = 
+    steps.length === 0 ? "Nothing to search"
+    : isDone ? (hasPath ? `Path found, cost ${pathCost}` : "No path found")
+    : stepIndex === 0 ? "Press Play to begin"
+    : "Searching...";
 
   function applyMode(mode: DragMode, cell: Cell) {
     let next = grid;
@@ -120,61 +128,99 @@ export default function PathfindingView() {
 
   return (
     <div>
-      <select
-        value={algoId}
-        onChange={(e) => handleAlgoChange(e.target.value as AlgoId)}
-      >
-        <option value="bfs">BFS</option>
-        <option value="dijkstra">Dijkstra</option>
-        <option value="astar">A Star</option>
-      </select>
+      <main>
+        <div className="left">
+          <section className="visualiser card">
+            <GridView
+              grid={grid}
+              states={states}
+              onCellDown={handleDown}
+              onCellEnter={handleEnter}
+              onRelease={handleRelease}
+            />
+            <p className="explanation" aria-live="polite">{status}</p>
 
-      <GridView
-        grid={grid}
-        states={states}
-        onCellDown={handleDown}
-        onCellEnter={handleEnter}
-        onRelease={handleRelease}
-      ></GridView>
+            <div className="legend">
+              <span><i className="dot start"/>Start</span>
+              <span><i className="dot end"/>End</span>
+              <span><i className="dot wall"/>Wall</span>
+              <span><i className="dot weight"/>Weighted</span>
+              <span><i className="dot frontier"/>Frontier</span>
+              <span><i className="dot visited"/>Visited</span>
+              <span><i className="dot path"/>Path</span>
+            </div>
+          </section>
 
-      <div className="button-row">
-        <button className="primary" onClick={isPlaying ? pause : play}>
-          {isPlaying ? "Pause" : "Play"}
-        </button>
-        <button onClick={reset}>Reset</button>
-        <button onClick={handleClearWalls}>Clear</button>
-      </div>
+          <section className="info card">
+            <div className="stat-row">
+              <StatTile label="Visited" value={visited} />
+              <StatTile label="Path Length" value={(isDone ? pathMoves : "-")} />
+              <StatTile label="Path Cost" value={(isDone ? pathCost : "-")} />
+            </div>
+          </section>
+        </div>
 
-      <Field label="Progress" value={`${stepIndex} / ${steps.length}`}>
-        <input
-          type="range"
-          min={0}
-          max={steps.length}
-          value={stepIndex}
-          onChange={(e) => seek(Number(e.target.value))}
-        />
-      </Field>
+        <aside className="side">
+          <section className="controls card">
+            <select
+              value={algoId}
+              onChange={(e) => handleAlgoChange(e.target.value as AlgoId)}
+            >
+              <option value="bfs">BFS</option>
+              <option value="dijkstra">Dijkstra</option>
+              <option value="astar">A Star</option>
+            </select>
 
-      <div className="segmented" role="group" aria-label="Tool">
-        <button
-          className={tool === "wall" ? "active" : ""}
-          aria-pressed={tool === "wall"}
-          onClick={() => setTool("wall")}
-        >
-          Wall
-        </button>
-        <button
-          className={tool === "weight" ? "active" : ""}
-          aria-pressed={tool === "weight"}
-          onClick={() => setTool("weight")}
-        >
-          Weight
-        </button>
-      </div>
+            <div className="button-row">
+              <button className="primary" onClick={isPlaying ? pause : play}>
+                {isPlaying ? "Pause" : "Play"}
+              </button>
+              <button onClick={reset}>Reset</button>
+              <button onClick={handleClearWalls}>Clear</button>
+            </div>
 
-      <p>Visited: {visited}</p>
-      {isDone &&
-        (hasPath ? <p>Path cost: {pathCost}</p> : <p>No path found</p>)}
+            <Field label="Speed" value={`${speed}x`}>
+              <input
+                type="range"
+                min={1}
+                max={10}
+                value={speed}
+                onChange={(e) => setSpeed(Number(e.target.value))}
+              />
+            </Field>
+
+            <Field label="Progress" value={`${stepIndex} / ${steps.length}`}>
+              <input
+                type="range"
+                min={0}
+                max={steps.length}
+                value={stepIndex}
+                onChange={(e) => seek(Number(e.target.value))}
+              />
+            </Field>
+
+            <Field label="Draw Tool">
+              <div className="segmented" role="group" aria-label="Tool">
+                <button
+                  className={tool === "wall" ? "active" : ""}
+                  aria-pressed={tool === "wall"}
+                  onClick={() => setTool("wall")}
+                >
+                  Wall
+                </button>
+                <button
+                  className={tool === "weight" ? "active" : ""}
+                  aria-pressed={tool === "weight"}
+                  onClick={() => setTool("weight")}
+                >
+                  Weight
+                </button>
+              </div>
+            </Field>
+          </section>
+
+        </aside>
+      </main>
     </div>
   );
 }

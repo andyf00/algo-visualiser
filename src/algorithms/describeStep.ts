@@ -2,7 +2,7 @@ import type { Step } from "./sorting/types";
 
 // `array` is the array as currently displayed (after the step was applied)
 export function describeStep(step: Step | null, array: number[]): string {
-  if (step === null) return "Press Play or Step to begin.";
+  if (step === null) return "Press Play or Step to begin";
   if (step.note) return step.note;
 
   switch (step.type) {
