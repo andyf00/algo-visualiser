@@ -12,7 +12,7 @@ export function describeStep(step: Step | null, array: number[]): string {
     }
     case "swap": {
       const [i, j] = step.indices;
-      return `Swapped ${array[j]} and ${array[i]} (positions ${i} and ${j})`;
+      return `Swapped ${array[j]} and ${array[i]}`;
     }
     case "overwrite": {
       return `Wrote ${step.value} to position ${step.index}`;

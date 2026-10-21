@@ -4,7 +4,6 @@ import { usePlayback } from "../hooks/usePlayback";
 import { GridView } from "../components/GridView";
 import { Field } from "../components/Field";
 import { StatTile } from "../components/StatTile";
-import { Pill } from "../components/Pill";
 import { bfs } from "../algorithms/pathfinding/bfs";
 import { dijkstra } from "../algorithms/pathfinding/dijkstra";
 import { astar } from "../algorithms/pathfinding/astar";
