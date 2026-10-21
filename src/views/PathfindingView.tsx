@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { applyPathStep, type Cell } from "../algorithms/pathfinding/types";
+import { applyPathStep, type Cell, type Grid } from "../algorithms/pathfinding/types";
 import { usePlayback } from "../hooks/usePlayback";
 import { GridView } from "../components/GridView";
 import { Field } from "../components/Field";
@@ -15,6 +15,7 @@ import {
   moveEndpoint,
   clearWalls,
   setWeight,
+  clearWeights,
 } from "../algorithms/pathfinding/gridUtils";
 
 const algos = { bfs, dijkstra, astar };
@@ -75,6 +76,13 @@ export default function PathfindingView() {
     : stepIndex === 0 ? "Press Play to begin"
     : "Searching...";
 
+  function commit(next: Grid) {
+    if (next !== grid) {
+      setGrid(next);
+      reset();
+    }
+  }
+
   function applyMode(mode: DragMode, cell: Cell) {
     let next = grid;
     if (mode === "drawWall") next = setWall(grid, cell, true);
@@ -84,10 +92,7 @@ export default function PathfindingView() {
     else if (mode === "moveStart") next = moveEndpoint(grid, "start", cell);
     else if (mode === "moveEnd") next = moveEndpoint(grid, "end", cell);
 
-    if (next !== grid) {
-      setGrid(next);
-      reset();
-    }
+    commit(next);
   }
 
   function handleDown(cell: Cell) {
@@ -113,11 +118,11 @@ export default function PathfindingView() {
   }
 
   function handleClearWalls() {
-    const next = clearWalls(grid);
-    if (next !== grid) {
-      setGrid(next);
-      reset();
-    }
+    commit(clearWalls(grid));
+  }
+
+  function handleClearWeights() {
+    commit(clearWeights(grid));
   }
 
   function handleAlgoChange(id: AlgoId) {
@@ -175,7 +180,10 @@ export default function PathfindingView() {
                 {isPlaying ? "Pause" : "Play"}
               </button>
               <button onClick={reset}>Reset</button>
-              <button onClick={handleClearWalls}>Clear</button>
+            </div>
+            <div className="button-row">
+              <button onClick={handleClearWalls}>Clear walls</button>
+              <button onClick={handleClearWeights}>Clear weights</button>
             </div>
 
             <Field label="Speed" value={`${speed}x`}>
