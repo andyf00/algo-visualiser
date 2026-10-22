@@ -1,5 +1,5 @@
 import { it, expect } from "vitest";
-import { algorithms } from "./index";
+import { algorithms } from "./registry";
 
 it.each(algorithms.map((a) => [a.name, a] as const))(
   "%s: every step has a valid pseudocode line",

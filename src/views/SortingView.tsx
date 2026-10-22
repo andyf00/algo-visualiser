@@ -6,15 +6,15 @@ import { StatTile } from "../components/StatTile";
 import { Pill } from "../components/Pill";
 import { applyStep } from "../algorithms/sorting/types";
 import { usePlayback } from "../hooks/usePlayback";
-import { algorithms } from "../algorithms";
-import { randomArray } from "../algorithms/utils/randomArray";
-import { computeStats } from "../algorithms/stats";
-import { describeStep } from "../algorithms/describeStep";
+import { algorithms } from "../algorithms/sorting/registry";
+import { randomArray } from "../algorithms/sorting/randomArray";
+import { computeStats } from "../algorithms/sorting/stats";
+import { describeStep } from "../algorithms/sorting/describeStep";
 import {
   parseNumbers,
   MAX_VALUE,
   MAX_LENGTH,
-} from "../algorithms/utils/parseNumbers";
+} from "../algorithms/sorting/parseNumbers";
 
 export default function SortingView() {
   const [algorithmId, setAlgorithmId] = useState("bubble");

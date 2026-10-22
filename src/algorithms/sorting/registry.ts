@@ -1,8 +1,8 @@
-import type { Step } from "./sorting/types";
-import { bubbleSort } from "./sorting/bubbleSort";
-import { insertionSort } from "./sorting/insertionSort";
-import { mergeSort } from "./sorting/mergeSort";
-import { quickSort } from "./sorting/quickSort";
+import type { Step } from "./types";
+import { bubbleSort } from "./bubbleSort";
+import { insertionSort } from "./insertionSort";
+import { mergeSort } from "./mergeSort";
+import { quickSort } from "./quickSort";
 
 export type AlgorithmInfo = {
   id: string;

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { computeStats } from "./stats";
-import { bubbleSort } from "./sorting/bubbleSort";
-import { mergeSort } from "./sorting/mergeSort";
+import { bubbleSort } from "./bubbleSort";
+import { mergeSort } from "./mergeSort";
 
 describe("computeStats", () => {
   it("counts only up to stepIndex", () => {

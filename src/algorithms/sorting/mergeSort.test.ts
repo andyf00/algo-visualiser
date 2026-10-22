@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { mergeSort } from "./mergeSort";
-import { cases, runSteps } from "../utils/testUtils";
+import { cases, runSteps } from "./testUtils";
 
 describe("insertionSort", () => {
   it.each(cases.map((c) => [c]))("sorts %j", (input) => {
