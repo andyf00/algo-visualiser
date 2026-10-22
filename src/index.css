@@ -269,7 +269,6 @@ body {
 .grid {
   display: grid;
   gap: 1px;
-  aspect-ratio: 2 / 1;
   user-select: none;
   touch-action: none;
 }
@@ -277,6 +276,7 @@ body {
   background: var(--bg);
   border-radius: 2px;
   transition: background-color 0.15s;
+  aspect-ratio: 1;
 }
 .cell.frontier { background: var(--cell-frontier);}
 .cell.visited { background: var(--cell-visited);}

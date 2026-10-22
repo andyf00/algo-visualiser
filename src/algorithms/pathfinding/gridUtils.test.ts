@@ -9,6 +9,9 @@ import {
   buildPath,
   emptyWalls,
   defaultWeights,
+  inBounds,
+  sameCell,
+  defaultEndpoints,
 } from "./gridUtils";
 import { setWall } from "./gridUtils";
 import type { Cell } from "./types";
@@ -31,6 +34,25 @@ describe("gridUtils", () => {
     g.walls[0][1] = true;
     expect(g.walls[1][1]).toBe(false);
     expect(g.walls[0][1]).toBe(true);
+  });
+});
+
+describe("defaultEndpoints", () => {
+  it.each([
+    [10, 15],
+    [15, 30],
+    [25, 50],
+  ])("endpoints for %ix%i are valid", (rows, cols) => {
+    const { start, end } = defaultEndpoints(rows, cols);
+    const grid = makeGrid(rows, cols, start, end);
+    expect(inBounds(grid, start)).toBe(true);
+    expect(inBounds(grid, end)).toBe(true);
+    expect(sameCell(start, end)).toBe(false);
+  });
+
+  it("puts start left of end", () => {
+    const { start, end } = defaultEndpoints(15, 30);
+    expect(start.col).toBeLessThan(end.col);
   });
 });
 

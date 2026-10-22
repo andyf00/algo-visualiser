@@ -29,6 +29,15 @@ export function makeGrid(
   };
 }
 
+export function defaultEndpoints(rows: number, cols: number): { start: Cell, end: Cell } {
+  const midRow = Math.floor(rows / 2);
+  const startCol = Math.floor(cols / 6);
+  let endCol = Math.floor((5 * cols) / 6);
+
+  if (startCol === endCol) endCol = cols - 1;
+  return { start: {row: midRow, col: startCol}, end: {row :midRow, col: endCol} }
+}
+
 export function emptyWalls(rows: number, cols: number): boolean[][] {
   return Array.from({ length: rows }, () => Array<boolean>(cols).fill(false));
 }

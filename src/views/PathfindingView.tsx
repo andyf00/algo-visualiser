@@ -16,7 +16,15 @@ import {
   clearWalls,
   setWeight,
   clearWeights,
+  defaultEndpoints,
 } from "../algorithms/pathfinding/gridUtils";
+
+const SIZES = {
+  small: { rows: 10, cols: 15, label: "Small" },
+  medium: { rows: 15, cols: 30, label: "Medium" },
+  large: { rows: 25, cols: 50, label: "Large" },
+} as const;
+type SizeId = keyof typeof SIZES;
 
 const algos = { bfs, dijkstra, astar };
 type AlgoId = keyof typeof algos;
@@ -32,10 +40,15 @@ type Tool = "wall" | "weight";
 
 const WEIGHT_VALUE = 5;
 
+function newGrid(id: SizeId): Grid {
+  const { rows, cols } = SIZES[id];
+  const { start, end } = defaultEndpoints(rows, cols);
+  return makeGrid(rows, cols, start, end);
+}
+
 export default function PathfindingView() {
-  const [grid, setGrid] = useState(() =>
-    makeGrid(15, 30, { row: 7, col: 3 }, { row: 7, col: 26 }),
-  );
+  const [sizeId, setSizeId] = useState<SizeId>(() => (window.innerWidth < 600 ? "small" : "medium"));
+  const [grid, setGrid] = useState(() => newGrid(sizeId));
   const [algoId, setAlgoId] = useState<AlgoId>("bfs");
   const [dragMode, setDragMode] = useState<DragMode>("none");
   const [tool, setTool] = useState<Tool>("wall");
@@ -81,6 +94,13 @@ export default function PathfindingView() {
       setGrid(next);
       reset();
     }
+  }
+
+  function handleSizeChanges(id: SizeId) {
+    if (id === sizeId) return;
+    setSizeId(id);
+    setGrid(newGrid(id));
+    reset();
   }
 
   function applyMode(mode: DragMode, cell: Cell) {
@@ -136,6 +156,7 @@ export default function PathfindingView() {
         <div className="left">
           <section className="visualiser card">
             <GridView
+              key={sizeId}
               grid={grid}
               states={states}
               onCellDown={handleDown}
@@ -207,7 +228,7 @@ export default function PathfindingView() {
             </Field>
 
             <Field label="Draw Tool">
-              <div className="segmented" role="group" aria-label="Tool">
+              <div className="segmented" role="group" aria-label="Draw Tool">
                 <button
                   className={tool === "wall" ? "active" : ""}
                   aria-pressed={tool === "wall"}
@@ -221,6 +242,33 @@ export default function PathfindingView() {
                   onClick={() => setTool("weight")}
                 >
                   Weight
+                </button>
+              </div>
+            </Field>
+
+            <Field label="Grid Size">
+              <div className="segmented" role="group" aria-label="Grid Size">
+                <button
+                  className={sizeId === "small" ? "active" : ""}
+                  aria-pressed={sizeId === "small"}
+                  onClick={() => handleSizeChanges("small")}
+                >
+                  Small
+                </button>
+                <button
+                  className={sizeId === "medium" ? "active" : ""}
+                  aria-pressed={sizeId === "medium"}
+                  onClick={() => handleSizeChanges("medium")}
+                >
+                  Medium
+                </button>
+                <button
+                  className={sizeId === "large" ? "active" : ""}
+                  aria-pressed={sizeId === "large"}
+                  onClick={() => handleSizeChanges("large")}
+
+                >
+                  Large
                 </button>
               </div>
             </Field>
