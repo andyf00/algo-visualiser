@@ -30,7 +30,7 @@ export function dijkstra(grid: Grid): PathStep[] {
     const current = open.splice(best, 1)[0];
 
     done[current.row][current.col] = true;
-    steps.push({ type: "visit", cell: current });
+    steps.push({ type: "visit", cell: current, line: 2 });
 
     if (sameCell(current, grid.end)) break;
 
@@ -51,7 +51,7 @@ export function dijkstra(grid: Grid): PathStep[] {
       if (cost < dist[next.row][next.col]) {
         if (dist[next.row][next.col] === Infinity) {
           open.push(next);
-          steps.push({ type: "frontier", cell: next });
+          steps.push({ type: "frontier", cell: next, line: 5 });
         }
         dist[next.row][next.col] = cost;
         cameFrom[next.row][next.col] = current;
@@ -62,6 +62,6 @@ export function dijkstra(grid: Grid): PathStep[] {
   if (dist[grid.end.row][grid.end.col] === Infinity) return steps;
 
   const path = buildPath(cameFrom, grid.end);
-  for (const p of path) steps.push({ type: "path", cell: p });
+  for (const p of path) steps.push({ type: "path", cell: p, line: 6 });
   return steps;
 }

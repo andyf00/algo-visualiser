@@ -1,3 +1,5 @@
+type Meta = { line?: number };
+
 export type Cell = { row: number; col: number };
 
 export type Grid = {
@@ -12,9 +14,9 @@ export type Grid = {
 export type CellState = "empty" | "frontier" | "visited" | "path";
 
 export type PathStep =
-  | { type: "frontier"; cell: Cell } // discovered, waiting to be explored
-  | { type: "visit"; cell: Cell } // now being explored
-  | { type: "path"; cell: Cell }; // part of the final route
+  | ({ type: "frontier"; cell: Cell } & Meta) // discovered, waiting to be explored
+  | ({ type: "visit"; cell: Cell } & Meta) // now being explored
+  | ({ type: "path"; cell: Cell } & Meta); // part of the final route
 
 export function applyPathStep(
   states: CellState[][],

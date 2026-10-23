@@ -19,7 +19,7 @@ export function bfs(grid: Grid): PathStep[] {
 
   while (head < queue.length) {
     const current = queue[head++];
-    steps.push({ type: "visit", cell: current });
+    steps.push({ type: "visit", cell: current, line: 2 });
 
     if (sameCell(current, grid.end)) break;
 
@@ -38,13 +38,13 @@ export function bfs(grid: Grid): PathStep[] {
       seen[next.row][next.col] = true;
       cameFrom[next.row][next.col] = current;
       queue.push(next);
-      steps.push({ type: "frontier", cell: next });
+      steps.push({ type: "frontier", cell: next, line: 4 });
     }
   }
 
   if (!seen[grid.end.row][grid.end.col]) return steps;
 
   const path = buildPath(cameFrom, grid.end);
-  for (const p of path) steps.push({ type: "path", cell: p });
+  for (const p of path) steps.push({ type: "path", cell: p, line: 5 });
   return steps;
 }
