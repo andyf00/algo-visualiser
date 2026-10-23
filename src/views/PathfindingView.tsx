@@ -4,6 +4,9 @@ import { usePlayback } from "../hooks/usePlayback";
 import { GridView } from "../components/GridView";
 import { Field } from "../components/Field";
 import { StatTile } from "../components/StatTile";
+import { Pill } from "../components/Pill";
+import { Pseudocode } from "../components/Pseudocode";
+import { pathAlgorithms } from "../algorithms/pathfinding/registry";
 import { bfs } from "../algorithms/pathfinding/bfs";
 import { dijkstra } from "../algorithms/pathfinding/dijkstra";
 import { astar } from "../algorithms/pathfinding/astar";
@@ -47,13 +50,14 @@ function newGrid(id: SizeId): Grid {
 }
 
 export default function PathfindingView() {
+  const [algoId, setAlgoId] = useState<AlgoId>("bfs");
   const [sizeId, setSizeId] = useState<SizeId>(() => (window.innerWidth < 600 ? "small" : "medium"));
   const [grid, setGrid] = useState(() => newGrid(sizeId));
-  const [algoId, setAlgoId] = useState<AlgoId>("bfs");
   const [dragMode, setDragMode] = useState<DragMode>("none");
   const [tool, setTool] = useState<Tool>("wall");
   const [speed, setSpeed] = useState(5);
 
+  const pathAlgorithm = pathAlgorithms.find((a) => a.id === algoId)!;
   const steps = useMemo(() => algos[algoId](grid), [algoId, grid]);
   const delayMs = 1000 / speed ** 2;
 
@@ -74,6 +78,8 @@ export default function PathfindingView() {
   const pathCost = pathCells.slice(1).reduce((sum, c) => sum + grid.weights[c.row][c.col], 0);
   const hasPath = steps.some((s) => s.type === "path");
   const isDone = steps.length > 0 && stepIndex === steps.length;
+  const lastStep = stepIndex > 0 ? steps[stepIndex - 1] : null;
+  const activeLine = isDone ? null : (lastStep?.line ?? null);
 
   const states = useMemo(
     () =>
@@ -182,6 +188,15 @@ export default function PathfindingView() {
               <StatTile label="Path Length" value={(isDone ? pathMoves : "-")} />
               <StatTile label="Path Cost" value={(isDone ? pathCost : "-")} />
             </div>
+
+            <div className="pill-row">
+              <Pill label="Time" value={pathAlgorithm.time} />
+              <Pill label="Space" value={pathAlgorithm.space} />
+              <Pill label="Weights" value={pathAlgorithm.usesWeights ? "used" : "ignored"} />
+              <Pill label="Shortest" value={pathAlgorithm.usesWeights ? "lowest cost" : "fewest steps"} />
+            </div>
+
+            <p className="description">{pathAlgorithm.description}</p>
           </section>
         </div>
 
@@ -274,6 +289,10 @@ export default function PathfindingView() {
             </Field>
           </section>
 
+          <section className="card pseudocode-card">
+            <h2 className="field-label">Pseudocode</h2>
+            <Pseudocode lines={pathAlgorithm.pseudocode} activeLine={activeLine} />
+          </section>
         </aside>
       </main>
     </div>
