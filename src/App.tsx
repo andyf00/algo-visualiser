@@ -1,8 +1,14 @@
 import { useState } from "react";
 import PathfindingView from "./views/PathfindingView";
 import SortingView from "./views/SortingView";
+import { Segmented, type Option } from "./components/Segmented";
 
 type Mode = "sorting" | "pathfinding";
+
+const MODES: Option<Mode>[] = [
+  { id: "sorting", label: "Sorting" },
+  { id: "pathfinding", label: "Pathfinding" },
+]
 
 export default function App() {
   const [mode, setMode] = useState<Mode>("sorting");
@@ -12,22 +18,7 @@ export default function App() {
       <header>
         <h1>Algorithm Visualiser</h1>
 
-        <div className="segmented" role="group" aria-label="Mode">
-          <button
-            className={mode === "sorting" ? "active" : ""}
-            aria-pressed={mode === "sorting"}
-            onClick={() => setMode("sorting")}
-          >
-            Sorting
-          </button>
-          <button
-            className={mode === "pathfinding" ? "active" : ""}
-            aria-pressed={mode === "pathfinding"}
-            onClick={() => setMode("pathfinding")}
-          >
-            Pathfinding
-          </button>
-        </div>
+        <Segmented label="Mode" value={mode} options={MODES} onChange={setMode}></Segmented>
       </header>
 
       {mode === "sorting" ? <SortingView /> : <PathfindingView />}

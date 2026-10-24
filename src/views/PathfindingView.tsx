@@ -21,6 +21,7 @@ import {
   clearWeights,
   defaultEndpoints,
 } from "../algorithms/pathfinding/gridUtils";
+import { Segmented, type Option } from "../components/Segmented";
 
 const SIZES = {
   small: { rows: 10, cols: 15, label: "Small" },
@@ -28,6 +29,19 @@ const SIZES = {
   large: { rows: 25, cols: 50, label: "Large" },
 } as const;
 type SizeId = keyof typeof SIZES;
+
+const SIZE_OPTIONS: Option<SizeId>[] = [
+  { id: "small", label: SIZES.small.label },
+  { id: "medium", label: SIZES.medium.label },
+  { id: "large", label: SIZES.large.label },
+]
+
+type Tool = "wall" | "weight";
+
+const TOOLS: Option<Tool>[] = [
+  { id: "wall", label: "Wall" },
+  { id: "weight", label: "Weight" },
+]
 
 const algos = { bfs, dijkstra, astar };
 type AlgoId = keyof typeof algos;
@@ -39,7 +53,6 @@ type DragMode =
   | "eraseWeight"
   | "moveStart"
   | "moveEnd";
-type Tool = "wall" | "weight";
 
 const WEIGHT_VALUE = 5;
 
@@ -243,49 +256,11 @@ export default function PathfindingView() {
             </Field>
 
             <Field label="Draw Tool">
-              <div className="segmented" role="group" aria-label="Draw Tool">
-                <button
-                  className={tool === "wall" ? "active" : ""}
-                  aria-pressed={tool === "wall"}
-                  onClick={() => setTool("wall")}
-                >
-                  Wall
-                </button>
-                <button
-                  className={tool === "weight" ? "active" : ""}
-                  aria-pressed={tool === "weight"}
-                  onClick={() => setTool("weight")}
-                >
-                  Weight
-                </button>
-              </div>
+              <Segmented label="Draw Tool" value={tool} options={TOOLS} onChange={setTool}></Segmented>
             </Field>
 
             <Field label="Grid Size">
-              <div className="segmented" role="group" aria-label="Grid Size">
-                <button
-                  className={sizeId === "small" ? "active" : ""}
-                  aria-pressed={sizeId === "small"}
-                  onClick={() => handleSizeChanges("small")}
-                >
-                  Small
-                </button>
-                <button
-                  className={sizeId === "medium" ? "active" : ""}
-                  aria-pressed={sizeId === "medium"}
-                  onClick={() => handleSizeChanges("medium")}
-                >
-                  Medium
-                </button>
-                <button
-                  className={sizeId === "large" ? "active" : ""}
-                  aria-pressed={sizeId === "large"}
-                  onClick={() => handleSizeChanges("large")}
-
-                >
-                  Large
-                </button>
-              </div>
+              <Segmented label="Grid Size" value={sizeId} options={SIZE_OPTIONS} onChange={handleSizeChanges}></Segmented>
             </Field>
           </section>
 
