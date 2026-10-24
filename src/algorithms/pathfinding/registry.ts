@@ -33,8 +33,8 @@ export const pathAlgorithms: PathAlgorithmInfo[] = [
       "while the queue is not empty:",
       "  take the next cell and visit it",
       "  if it is the end: stop",
-      "  add each unseen open neighbour to the queue",
-      "walk back from the end to draw the path",
+      "  add unseen neighbours to the queue",
+      "walk back to draw the path",
     ],
   },
   {
@@ -54,11 +54,11 @@ export const pathAlgorithms: PathAlgorithmInfo[] = [
     pseudocode: [
       "cost[start] = 0, every other cell = infinity",
       "while there are discovered cells:",
-      "  visit the discovered cell with the lowest cost",
+      "  visit discovered cell with lowest cost",
       "  if it is the end: stop",
       "  for each neighbour: cost = my cost + its weight",
       "    if cheaper than its best so far: update it",
-      "walk back from the end to draw the path",
+      "walk back to draw the path",
     ],
   },
   {
@@ -77,11 +77,11 @@ export const pathAlgorithms: PathAlgorithmInfo[] = [
     pseudocode: [
       "cost[start] = 0, every other cell = infinity",
       "while there are discovered cells:",
-      "  visit the cell with the lowest cost + estimate to end",
+      "  visit cell with lowest cost + estimate to end",
       "  if it is the end: stop",
       "  for each neighbour: cost = my cost + its weight",
       "    if cheaper than its best so far: update it",
-      "walk back from the end to draw the path",
+      "walk back to draw the path",
     ],
   },
 ];
