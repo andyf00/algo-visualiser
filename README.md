@@ -4,7 +4,7 @@ An interactive visualiser for sorting and pathfinding algorithms, built with Rea
 
 **Live demo:** https://algovisualiser-af.netlify.app/
 
-![Sorting mode](docs/sorting.png)
+![Sorting mode](docs/sorting.gif)
 ![Pathfinding mode](docs/pathfinding.gif)
 
 ## Features
