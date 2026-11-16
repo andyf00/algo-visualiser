@@ -94,31 +94,6 @@ Pathfinding uses the same pattern with a different step type (`frontier`, `visit
 - BFS ignores weights, so on a weighted grid it finds the path with the fewest steps, which is not necessarily the cheapest. Running BFS and Dijkstra on the same grid shows the difference.
 - Quick Sort uses the last element as the pivot, so already-sorted input is its worst case.
 
-## Project structure
-
-```
-src/
-  algorithms/
-    sorting/
-      bubbleSort.ts, insertionSort.ts, mergeSort.ts, quickSort.ts
-      types.ts          Step type and applyStep
-      stats.ts          derived comparison/swap/write counts
-      describeStep.ts   human-readable text for the current step
-      registry.ts       algorithm metadata: complexity, description, pseudocode
-      randomArray.ts, parseNumbers.ts
-    pathfinding/
-      bfs.ts, dijkstra.ts, astar.ts
-      types.ts          Grid, Cell, PathStep and applyPathStep
-      gridUtils.ts      grid creation and immutable editing helpers
-      registry.ts
-  components/           Bars, GridView, Segmented, Field, StatTile, Pill, Pseudocode
-  hooks/                usePlayback
-  views/                SortingView, PathfindingView
-  App.tsx
-```
-
-Every algorithm and helper has a `.test.ts` file next to it.
-
 ## Testing
 
 ```bash
